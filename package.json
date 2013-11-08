@@ -1,0 +1,14 @@
+{
+  "name": "kateray",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "3.4.0",
+    "coffee-script": "1.6.2",
+    "connect-assets": "*",
+    "jade": "*"
+  }
+}
