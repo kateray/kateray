@@ -3,12 +3,47 @@ body {
   font: 10px sans-serif;
 }
 
+#github-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
 .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+  cursor: pointer;
+}
+.node.general {
+  font-size: 15px;
 }
 
 .link {
-  stroke: #999;
+  stroke: #000;
   stroke-opacity: .6;
+}
+
+.node.center {
+  font-size: 50px;
+}
+.node.project {
+  font-size: 30px;
+}
+.node.url {
+  font-size: 10px;
+}
+.node.essay {
+  font-size: 15px;
+}
+
+.node.idea {
+  font-style: italic;
+  font-size: 14px;
+  width: 50px;
+}
+
+.node.subject {
+  font-size: 14px;
+  color: #838383;
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0.4;
 }

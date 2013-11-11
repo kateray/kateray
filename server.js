@@ -1,27 +1,22 @@
-json = {
-  "nodes": [
-    {
-      "id": "a",
-    },
-    {
-      "id": "b"
-    },
-    {
-      "id": "c"
+var fs = require("fs"),
+    json;
+
+function readJsonFileSync(filepath, encoding){
+
+    if (typeof (encoding) == 'undefined'){
+        encoding = 'utf8';
     }
-  ],
-  "links": [
-    {
-      "source": "a",
-      "target": "b"
-    },
-    {
-      "source": "b",
-      "target": "c"
-    }
-  ]
+    var file = fs.readFileSync(filepath, encoding);
+    return JSON.parse(file);
 }
 
+function getConfig(file){
+
+    var filepath = __dirname + '/' + file;
+    return readJsonFileSync(filepath);
+}
+
+var data = getConfig('data.json')
 var express = require('express');
 var app = express();
 app.set('views', __dirname + '/views');
@@ -34,7 +29,7 @@ app.get("/", function(req, res) {
   });
 });
 app.get("/data.json", function(req, res) {
-  res.send(json);
+  res.send(data);
 })
 app.listen(3000);
 console.log('Listening on port 3000');

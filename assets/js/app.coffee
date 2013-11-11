@@ -1,31 +1,55 @@
 $ ->
-  width = 960
-  height = 500
+  width = $(window).width()
+  height = $(window).height()
 
   color = d3.scale.category20()
 
   force = d3.layout.force()
-  force.charge(-120)
-  force.linkDistance(30)
+  force.charge(-800)
+  force.linkDistance(100)
   force.size([width, height])
 
   svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
 
-  d3.json "data.json", (graph) ->
+  parseData = (data) ->
+    _.each data.links, (l) ->
+      l.source = _.findWhere(data.nodes, {id: l.source})
+      l.target = _.findWhere(data.nodes, {id: l.target})
+    data
+
+  d3.json "data.json", (data) ->
+    graph = parseData(data)
+
     force
       .nodes(graph.nodes)
       .links(graph.links)
       .start()
 
-    link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link").style("stroke-width", (d) ->
-      Math.sqrt d.value
-    )
+    link = svg.selectAll(".link")
+      .data(graph.links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .style("stroke-width", (d) ->
+        Math.sqrt d.value
+      )
 
-    node = svg.selectAll(".node").data(graph.nodes).enter().append("circle").attr("class", "node").attr("r", 5).style("fill", (d) ->
-      color d.group
-    ).call(force.drag)
+    node = svg.selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("svg:a").attr("target", "_blank").attr("xlink:href", (d) ->
+        d.href
+      )
+      .append("text")
+      .text( (d) ->
+        d.text
+      )
+      .attr("class", (d) ->
+        "node " + d.type
+      )
+      .call(force.drag)
 
     force.on "tick", ->
       link.attr("x1", (d) ->
@@ -37,7 +61,7 @@ $ ->
       ).attr "y2", (d) ->
         d.target.y
 
-      node.attr("cx", (d) ->
+      node.attr("x", (d) ->
         d.x
-      ).attr "cy", (d) ->
+      ).attr "y", (d) ->
         d.y
