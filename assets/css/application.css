@@ -10,6 +10,10 @@ body {
   right: 20px;
 }
 
+/*a {
+  text-decoration: underline;
+}*/
+
 .circle {
 /*  opacity: 0.4;
 */}
@@ -17,7 +21,6 @@ body {
 .node {
   cursor: pointer;
   background-color: #e2e2e2;
-  width: 200px;
 }
 .node.general {
   font-size: 15px;
@@ -45,6 +48,7 @@ body {
   font-style: italic;
   font-size: 14px;
   width: 50px;
+  opacity: 0.8;
 }
 
 .node.subject {
@@ -52,5 +56,5 @@ body {
   color: #838383;
   text-transform: uppercase;
   font-weight: bold;
-  opacity: 0.4;
+  opacity: 0.25;
 }
