@@ -31,5 +31,5 @@ app.get("/", function(req, res) {
 app.get("/data.json", function(req, res) {
   res.send(data);
 })
-app.listen(3000);
-console.log('Listening on port 3000');
+var port = process.env.PORT || 3000;
+app.listen(port);
