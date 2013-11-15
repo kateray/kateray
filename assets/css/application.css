@@ -1,6 +1,7 @@
 body {
   background: #cacaca;
   font: 10px sans-serif;
+  margin: 0px;
 }
 
 #github-link {
@@ -9,8 +10,14 @@ body {
   right: 20px;
 }
 
+.circle {
+/*  opacity: 0.4;
+*/}
+
 .node {
   cursor: pointer;
+  background-color: #e2e2e2;
+  width: 200px;
 }
 .node.general {
   font-size: 15px;
@@ -18,7 +25,7 @@ body {
 
 .link {
   stroke: #000;
-  stroke-opacity: .6;
+  stroke-opacity: .2;
 }
 
 .node.center {
