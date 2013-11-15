@@ -6,6 +6,9 @@ parseData = (data) ->
   _.each data.nodes, (n) ->
     switch n.type
       when "center"
+        n.fixed = true
+        n.x = 700
+        n.y = 500
         n.rx = 80
         n.ry = 30
       when "project"
@@ -20,10 +23,9 @@ parseData = (data) ->
 collide = (graph) ->
   quadtree = d3.geom.quadtree(graph.nodes)
   (d) ->
-    if d.type == "center"
-      d.x = 750
-      d.y = 500
-      return
+    # if d.type == "center"
+    #   console.log d
+    #   return
 
     nx1 = d.x - d.rx
     nx2 = d.x + d.rx
@@ -46,7 +48,7 @@ collide = (graph) ->
       x1 > nx2 or x2 < nx1 or y1 > ny2 or y2 < ny1
 
 $ ->
-  width = 1500
+  width = $(window).width()
   height = 1000
 
   force = d3.layout.force()
@@ -123,5 +125,3 @@ $ ->
       .attr("class", (d) -> "node " + d.type)
       .style("text-anchor", "middle")
       .call(force.drag)
-
-
