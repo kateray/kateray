@@ -9,23 +9,23 @@ parseData = (data) ->
         n.fixed = true
         n.x = 700
         n.y = 500
-        n.rx = 80
-        n.ry = 30
+        n.rx = 70
+        n.ry = 20
       when "project"
         n.rx = 50
-        n.ry = 30
+        n.ry = 20
+      when "essay"
+        n.rx = 50
+        n.ry = 15
       else
         n.rx = 30
-        n.ry = 20
+        n.ry = 10
 
   data
 
 collide = (graph) ->
   quadtree = d3.geom.quadtree(graph.nodes)
   (d) ->
-    # if d.type == "center"
-    #   console.log d
-    #   return
 
     nx1 = d.x - d.rx
     nx2 = d.x + d.rx
@@ -47,12 +47,55 @@ collide = (graph) ->
           quad.point.y += y
       x1 > nx2 or x2 < nx1 or y1 > ny2 or y2 < ny1
 
+nodeOpacity = (n) ->
+  if n.type == "center" or n.type == "project"
+    1
+  else if n.type == "subject"
+    0.25
+  else
+    0.4
+
+nodeColor = (n) ->
+  if n.type == "subject"
+    "#6a6a6a"
+  # else if n.type == "center"
+  #   "#385299"
+  # else if n.id == "tytc"
+  #   "#385299"
+  # else if n.id == "alongside"
+  #   "#385299"
+  # else if n.id == "sem-doc"
+  #   "#385299"
+  # else if n.id == "scrollkit"
+  #   "#385299"
+  # else if n.id == "homepage"
+  #   "#385299"
+  # else if n.id == "kommons"
+  #   "#385299"
+  # else if n.id == "nerdcollider"
+  #   "#385299"
+  else
+    "#000000"
+
+nodeFontSize = (n) ->
+  if n.type == "center"
+    "60px"
+  else if n.type == "subject"
+    "16px"
+  else if n.type == "project"
+    "#{(n.weight*4/3 + n.year*7/3)}px"
+  else if n.type == "url"
+    "10px"
+  else
+    "15px"
+
 $ ->
-  width = $(window).width()
+  width = 1400
   height = 1000
 
   force = d3.layout.force()
   force.size([width, height])
+  force.gravity(0.2)
 
   svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -83,7 +126,7 @@ $ ->
         if d.type == "center"
           return -3000
         else
-          return -1500
+          return -1800
       )
       .linkStrength( (d) ->
         strength = 0.3
@@ -104,6 +147,7 @@ $ ->
       .enter()
       .append("line")
       .attr("class", "link")
+      .style("opacity", 0.2)
       .style("stroke-width", (d) ->
         if d.source.type == "center" || d.target.type == "center"
           1.8
@@ -112,7 +156,6 @@ $ ->
         else
           0.6
       )
-
 
     node = svg.selectAll(".node")
       .data(graph.nodes)
@@ -123,5 +166,29 @@ $ ->
       .append("text")
       .text( (d) -> d.text)
       .attr("class", (d) -> "node " + d.type)
+      .style("fill", nodeColor)
+      .style("opacity", nodeOpacity)
+      .style("font-size", nodeFontSize)
       .style("text-anchor", "middle")
       .call(force.drag)
+
+    node.on "mouseover", (d) ->
+
+      link.style "opacity", (l) ->
+        if d is l.source or d is l.target
+          1
+        else
+          0.2
+
+      node.style "opacity", (n) ->
+        return 1 if d is n
+        if _.find(graph.links, (l) ->
+          (d is l.source and n is l.target) or (n is l.source and d is l.target)
+        )
+          1
+        else
+          nodeOpacity(n)
+
+    node.on "mouseout", (d) ->
+      link.style "opacity", 0.2
+      node.style "opacity", nodeOpacity
