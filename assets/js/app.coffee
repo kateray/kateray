@@ -1,43 +1,26 @@
-parseData = (data) ->
-  _.each data.links, (l) ->
-    l.source = _.findWhere(data.nodes, {id: l.source})
-    l.target = _.findWhere(data.nodes, {id: l.target})
 
-  _.each data.nodes, (n) ->
-    switch n.type
-      when "center"
-        n.fixed = true
-        n.x = 700
-        n.y = 500
-        n.rx = 70
-        n.ry = 20
-      when "project"
-        n.rx = 50
-        n.ry = 20
-      when "essay"
-        n.rx = 50
-        n.ry = 15
-      else
-        n.rx = 30
-        n.ry = 10
-
-  data
 
 collide = (graph) ->
   quadtree = d3.geom.quadtree(graph.nodes)
   (d) ->
+    that = this
+    h = this.getBBox().height/2
+    w = this.getBBox().width/4
 
-    nx1 = d.x - d.rx
-    nx2 = d.x + d.rx
-    ny1 = d.y - d.ry
-    ny2 = d.y + d.ry
+    console.log this.getBBox()
+    nx1 = d.x - w
+    nx2 = d.x + w
+    ny1 = d.y - h
+    ny2 = d.y + h
 
     quadtree.visit (quad, x1, y1, x2, y2) ->
       if quad.point and (quad.point isnt d)
+
+
         x = quad.point.x - d.x
         y = quad.point.y - d.y
-        ry = d.ry + quad.point.ry
-        rx = d.rx + quad.point.rx
+        ry = h + quad.point.ry
+        rx = w + quad.point.rx
         if Math.abs(x) < rx and Math.abs(y) < ry
           l = Math.sqrt(x * x + y * y)
           l = (l - rx) / rx * .5
@@ -45,15 +28,20 @@ collide = (graph) ->
           d.y += y *= l
           quad.point.x += x
           quad.point.y += y
+
+          # that.setAttribute("transform", "translate(" + 0 + "," + 5 + ")");
+
       x1 > nx2 or x2 < nx1 or y1 > ny2 or y2 < ny1
 
 nodeOpacity = (n) ->
-  if n.type == "center" or n.type == "project"
+  if n.type == "center"
     1
+  else if n.type == "project"
+    0.6
   else if n.type == "subject"
-    0.25
+    0.13
   else
-    0.4
+    0.25
 
 nodeColor = (n) ->
   if n.type == "subject"
@@ -83,23 +71,42 @@ nodeFontSize = (n) ->
   else if n.type == "subject"
     "16px"
   else if n.type == "project"
-    "#{(n.weight*4/3 + n.year*7/3)}px"
+    "#{n.size}px"
   else if n.type == "url"
     "10px"
   else
     "15px"
 
 $ ->
-  width = 1400
-  height = 1000
+  width = $(window).width()
+  height = $(window).height()
 
-  force = d3.layout.force()
-  force.size([width, height])
-  force.gravity(0.2)
+  parseData = (data) ->
+    _.each data.links, (l) ->
+      l.source = _.findWhere(data.nodes, {id: l.source})
+      l.target = _.findWhere(data.nodes, {id: l.target})
 
-  svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    _.each data.nodes, (n) ->
+      switch n.type
+        when "center"
+          n.fixed = true
+          n.x = width/2
+          n.y = height/2
+          n.rx = 70
+          n.ry = 20
+        # when "project"
+        #   n.rx = 50
+        #   n.ry = 20
+        # when "essay"
+        #   n.rx = 50
+        #   n.ry = 15
+        else
+          n.rx = 30
+          n.ry = 10
+
+    data
+
+  viz = d3.select("body").append("svg").attr("width", width).attr("height", height)
 
 
   d3.json "data.json", (data) ->
@@ -108,9 +115,11 @@ $ ->
     tick = (e) ->
 
       node
-        .each(collide(graph))
         .attr("x", (d) -> d.x)
         .attr("y", (d) -> d.y)
+        # .each(collide(graph))
+
+
 
       link.attr("x1", (d) -> d.source.x).attr("y1", (d) ->
         d.source.y
@@ -119,45 +128,41 @@ $ ->
       ).attr "y2", (d) ->
         d.target.y
 
-    force
+    force = d3.layout.force()
+      .size([width, height])
+      .gravity(0.3)
       .nodes(graph.nodes)
       .links(graph.links)
-      .charge( (d) ->
-        if d.type == "center"
-          return -3000
-        else
-          return -1800
-      )
+      .charge(-1800)
+      # .charge( (d) ->
+      #   if d.type == "center"
+      #     return -3000
+      #   else
+      #     return -1800
+      # )
       .linkStrength( (d) ->
-        strength = 0.3
+        strength = 0.1
 
         if d.source.group && d.target.group
           if d.source.group == d.target.group
             strength = 1.3
           else
-            strength = 0.1
+            strength = 0.01
 
         strength
       )
       .on("tick", tick)
       .start()
 
-    link = svg.selectAll(".link")
+    link = viz.selectAll(".link")
       .data(graph.links)
       .enter()
       .append("line")
       .attr("class", "link")
-      .style("opacity", 0.2)
-      .style("stroke-width", (d) ->
-        if d.source.type == "center" || d.target.type == "center"
-          1.8
-        else if d.source.type == "idea" || d.target.type == "idea"
-          0.3
-        else
-          0.6
-      )
+      .style("opacity", 1)
+      .style("stroke-width", 0.05)
 
-    node = svg.selectAll(".node")
+    node = viz.selectAll(".node")
       .data(graph.nodes)
       .enter()
       .append("svg:a").attr("target", "_blank").attr("xlink:href", (d) ->
@@ -173,12 +178,13 @@ $ ->
       .call(force.drag)
 
     node.on "mouseover", (d) ->
-
-      link.style "opacity", (l) ->
+      link.style "stroke-width", (l) ->
         if d is l.source or d is l.target
-          1
+          0.5
         else
-          0.2
+          0.05
+        # else
+        #   0.2
 
       node.style "opacity", (n) ->
         return 1 if d is n
@@ -190,5 +196,5 @@ $ ->
           nodeOpacity(n)
 
     node.on "mouseout", (d) ->
-      link.style "opacity", 0.2
+      link.style "stroke-width", 0.05
       node.style "opacity", nodeOpacity
