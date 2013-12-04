@@ -5,10 +5,12 @@ html
     != css('application')
   body
     #vis
-    //- #key
-    //-   .type projects
-    //-   .type essays
-    //-   .type links
+    #key
+      .category(data="project") projects
+      .category(data="essay") essays
+      .category(data="idea") ideas
+      .category(data="url") links
+      .category(data="book") books
 
     a(href="http://github.com/kateray/kateray", id="github-link", target="_blank") source code on github
     != js('lib/jquery')

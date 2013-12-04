@@ -41,7 +41,7 @@ nodeOpacity = (n) ->
   else if n.type == "subject"
     0.13
   else
-    0.25
+    0.2
 
 nodeColor = (n) ->
   if n.type == "subject"
@@ -74,10 +74,15 @@ nodeFontSize = (n) ->
     "#{n.size}px"
   else if n.type == "url"
     "10px"
+  else if n.type == "book"
+    "10px"
   else
     "15px"
 
 $ ->
+  App = {}
+  App.category = null
+
   width = $(window).width()
   height = $(window).height()
 
@@ -178,6 +183,7 @@ $ ->
       .call(force.drag)
 
     node.on "mouseover", (d) ->
+      return if App.category
       link.style "stroke-width", (l) ->
         if d is l.source or d is l.target
           0.5
@@ -196,5 +202,29 @@ $ ->
           nodeOpacity(n)
 
     node.on "mouseout", (d) ->
+      return if App.category
       link.style "stroke-width", 0.05
       node.style "opacity", nodeOpacity
+
+    categoryOff = ->
+      App.category = null
+      $('.category').css('color', 'black')
+      node.style "opacity", (n) ->
+        nodeOpacity(n)
+
+    categoryOn = ->
+      $('.category[data='+App.category+']').css('color', 'purple')
+      node.style "opacity", (n) ->
+        if n.type == App.category
+          1
+        else
+          0.1
+
+    $('.category').click ->
+      category = $(this).attr('data')
+      if App.category == category
+        categoryOff()
+      else
+        categoryOff()
+        App.category = category
+        categoryOn()

@@ -10,6 +10,16 @@ body {
   right: 20px;
 }
 
+#key {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.category {
+  cursor: pointer;
+}
+
 a:hover {
   color: #385299;
 }
@@ -34,6 +44,10 @@ a:hover {
 }
 
 .node.url {
+  font-size: 10px;
+}
+
+.node.book {
   font-size: 10px;
 }
 .node.essay {
