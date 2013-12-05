@@ -82,16 +82,16 @@ $ ->
       node
         .attr("x", (d) -> d.x)
         .attr("y", (d) -> d.y)
-        # .each(collide(graph))
 
-
-
-      link.attr("x1", (d) -> d.source.x).attr("y1", (d) ->
-        d.source.y
-      ).attr("x2", (d) ->
-        d.target.x
-      ).attr "y2", (d) ->
-        d.target.y
+      link
+        .attr("x1", (d) ->
+          d.source.x
+        ).attr("y1", (d) ->
+          d.source.y
+        ).attr("x2", (d) ->
+          d.target.x
+        ).attr "y2", (d) ->
+          d.target.y
 
     force = d3.layout.force()
       .size([width, height])
@@ -99,12 +99,6 @@ $ ->
       .nodes(graph.nodes)
       .links(graph.links)
       .charge(-1800)
-      # .charge( (d) ->
-      #   if d.type == "center"
-      #     return -3000
-      #   else
-      #     return -1800
-      # )
       .linkStrength( (d) ->
         strength = 0.1
 

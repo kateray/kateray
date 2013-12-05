@@ -31,9 +31,11 @@ body {
 }
 
 .node.center {
+  z-index: 5;
   font-size: 50px;
 }
 .node.project {
+  z-index: 4;
   font-size: 30px;
 }
 
