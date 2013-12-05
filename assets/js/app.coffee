@@ -142,8 +142,8 @@ $ ->
         nodeOpacity(n)
 
     node.on "mouseover", (d) ->
-      if d.href
-        $(this).attr('color', 'blue')
+      if d.explanation
+        $('#explanation').html(d.explanation).css('opacity', 0.5)
 
       link.style "stroke-width", (l) ->
         if d is l.source or d is l.target
@@ -165,6 +165,7 @@ $ ->
     node.on "mouseout", (d) ->
       link.style "stroke-width", 0.05
       updateNodeOpacity()
+      $('#explanation').css('opacity', 0)
 
 
     categoryOff = ->
