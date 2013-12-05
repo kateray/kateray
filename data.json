@@ -11,7 +11,7 @@
     {"id": "javascript", "text": "javascript", "group":2, "type":"subject"},
     {"id": "gorbypuff", "text": "@gorbypuff", "href": "http://twitter.com/gorbypuff", "group":2, "type":"url"},
     {"id": "tytc", "text": "teach yourself to code", "group":2, "type":"project", "href": "http://teachyourselftocode.com", "year": 12, "size":22, "explanation": "<div>A link-sharing site for programming resources. While StackOverflow is great for answering specific questions, it actively discourages \"subjective\" ones like requests for good tutorials. I made this for people who don't know where to start.</div><div class='year'>2012</div>"},
-    {"id": "scrollkit", "text": "scroll kit", "group":5, "type":"project", "href": "http://www.scrollkit.com", "year": 13, "size":45, "explanation": "<div>scroll kit helps people tell powerful, visual stories on the web.</div><div class='year'>2012-present</div>"},
+    {"id": "scrollkit", "text": "scroll kit", "group":5, "type":"project", "href": "http://www.scrollkit.com", "year": 13, "size":45, "explanation": "<div>scroll kit helps people tell powerful, visual stories on the web. It's a flexible, in-browser design tool that makes building a webpage feel more like drawing.</div><div class='year'>2012-present</div>"},
     {"id": "nerdcollider", "text": "nerd collider", "group":5, "type":"project", "href": "http://nerdcollider.com", "year": 11, "size":20, "explanation": "<div>A discussion platform that encourages positive communication through a set of design constraints: <br> 1) restricting participants to an invited list <br> 2) focusing them around a constructive goal <br> 3) imposing a time limit to promote synchronicity</div><div class='year'>2011 (shut down)</div>"},
     {"id": "kommons", "text": "kommons", "group":5, "type":"project", "href": "http://kommons.com", "year": 10, "size":16, "explanation": "<div>A platform for people to direct questions to public figures and gather a crowd on Twitter to demand answers.</div><div class='year'>2010 (shut down)</div>"},
     {"id": "sk-idea-1", "text": "see changes as you're making them", "type":"idea"},
@@ -52,12 +52,19 @@
     {"id": "games", "text": "games", "type": "idea"},
     {"id": "raphael", "text": "Raphaël.js", "group": 2, "type": "subject"},
     {"id": "tufte", "text": "Edward Tufte", "group": 2, "type": "person"},
-    {"id": "tufte-1", "text": "A Visual Display of Quantitative Information", "group": 2, "type": "book"},
-    {"id": "consilience", "text": "Consilience", "type": "book"},
-    {"id": "mindnode", "text": "MindNode", "type": "url"},
+    {"id": "tufte-1", "text": "A Visual Display of Quantitative Information", "group": 2, "type": "book", "href":"http://www.amazon.com/Visual-Display-Quantitative-Information/dp/0961392142"},
+    {"id": "consilience", "text": "Consilience", "type": "book", "href":"http://www.amazon.com/Consilience-Knowledge-Edward-Osborne-Wilson/dp/067976867X"},
+    {"id": "mindnode", "text": "MindNode", "type": "url", "href":"https://mindnode.com"},
     {"id": "wilson", "text": "Edward O Wilson", "type": "person"},
-    {"id": "information", "text": "The Information", "type": "book"},
-    {"id": "qs", "text": "Quantified Self", "type": "subject"}
+    {"id": "information", "text": "The Information", "type": "book", "href":"http://www.amazon.com/Information-History-Theory-Flood/dp/1400096235"},
+    {"id": "qs", "text": "Quantified Self", "type": "subject"},
+    {"id": "meaning", "text": "Man's Search for Meaning", "type": "book", "href":"http://www.amazon.com/Mans-Search-Meaning-Viktor-Frankl/dp/080701429X"},
+    {"id": "sandwiches", "text": "sandwiches", "type": "project", "href":"http://imakethebestsandwiches.com", "size":14, "explanation":"I make the best sandwiches and you should too."},
+    {"id": "stumbling", "text": "Stumbling on Happiness", "type": "book", "group":3, "href": "http://www.amazon.com/Stumbling-Happiness-Daniel-Gilbert/dp/1400077427/"},
+    {"id": "flow", "text": "Flow", "type": "book", "group":3, "href": "http://www.amazon.com/Flow-The-Psychology-Optimal-Experience/dp/0061339202"},
+    {"id": "play", "text": "make creative work feel like play", "type": "idea"},
+    {"id": "shirky-book", "text": "Here Comes Everybody", "type": "book", "href": "http://www.amazon.com/Here-Comes-Everybody-Organizing-Organizations/dp/0143114948"},
+    {"id": "shirky", "text": "Clay Shirky", "type": "person"}
 
   ],
   "links": [
@@ -149,7 +156,16 @@
     {"source": "qs", "target": "alongside"},
     {"source": "homepage", "target": "node-js"},
     {"source": "backbone", "target": "tytc"},
-    {"source": "backbone", "target": "scrollkit"}
+    {"source": "backbone", "target": "scrollkit"},
+    {"source": "psychology", "target": "flow"},
+    {"source": "psychology", "target": "stumbling"},
+    {"source": "flow", "target": "games"},
+    {"source": "play", "target": "games"},
+    {"source": "play", "target": "sk-essay-1"},
+    {"source": "shirky", "target": "shirky-book"},
+    {"source": "shirky", "target": "sem-doc"},
+    {"source": "shirky-book", "target": "collaboration"},
+    {"source": "shirky-book", "target": "democracy"}
 
   ]
 }
