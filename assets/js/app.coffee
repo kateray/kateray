@@ -11,7 +11,7 @@ nodeOpacity = (n) ->
     if n.type == "center"
       1
     else if n.type == "project"
-      0.6
+      0.5
     else if n.type == "subject"
       0.13
     else

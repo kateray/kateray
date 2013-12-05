@@ -28,7 +28,7 @@ body {
   padding: 15px;
   font-size: 16px;
   line-height: 1.6;
-  transition: opacity .5s linear;
+  transition: opacity .4s linear;
 }
 
 .year {
@@ -43,6 +43,7 @@ body {
 .node {
   background-color: #e2e2e2;
   font-size: 10px;
+  transition: opacity .1s linear;
 }
 
 .link {

@@ -10,8 +10,8 @@
     {"id": "ruby", "text": "ruby", "group":2, "type":"subject"},
     {"id": "javascript", "text": "javascript", "group":2, "type":"subject"},
     {"id": "gorbypuff", "text": "@gorbypuff", "href": "http://twitter.com/gorbypuff", "group":2, "type":"url"},
-    {"id": "tytc", "text": "teach yourself to code", "group":2, "type":"project", "href": "http://teachyourselftocode.com", "year": 12, "size":22, "explanation": "<div>teachyourselftocode.com is a link-sharing site for programming resources. I built it for anyone who's starting something new in programming but doesn't know where to start. StackOverflow is great for answering specific questions but notoriously discouraging of anything \"subjective\" like requests for good tutorials.</div><div class='year'>2012</div>"},
-    {"id": "scrollkit", "text": "scroll kit", "group":5, "type":"project", "href": "http://www.scrollkit.com", "year": 13, "size":45},
+    {"id": "tytc", "text": "teach yourself to code", "group":2, "type":"project", "href": "http://teachyourselftocode.com", "year": 12, "size":22, "explanation": "<div>teachyourselftocode.com is a link-sharing site for programming resources. While StackOverflow is great for answering specific questions, it actively discourages \"subjective\" ones like requests for good tutorials. I made this for people who don't know where to start.</div><div class='year'>2012</div>"},
+    {"id": "scrollkit", "text": "scroll kit", "group":5, "type":"project", "href": "http://www.scrollkit.com", "year": 13, "size":45, "explanation": "<div>scroll kit helps people tell powerful, visual stories on the web.</div><div class='year'>2012-present</div>"},
     {"id": "nerdcollider", "text": "nerd collider", "group":5, "type":"project", "href": "http://nerdcollider.com", "year": 11, "size":20},
     {"id": "kommons", "text": "kommons", "group":5, "type":"project", "href": "http://kommons.com", "year": 10, "size":16},
     {"id": "sk-idea-1", "text": "see changes as you're making them", "type":"idea"},
@@ -41,14 +41,14 @@
     {"id": "data-viz", "group": 2, "text": "Data Visualization", "type": "subject"},
     {"id": "alongside", "group":2, "text": "alongside", "type": "project", "href": "http://alongside.co", "year": 13, "size":30, "explanation": "<div>Visualize your relationships via foursquare checkins. Sometimes our lives intersect for a very long time, and sometimes they diverge.</div><div class='year'>2013</div>"},
     {"id": "d3", "group":2, "text": "d3", "type": "subject"},
-    {"id": "homepage", "text": "this page", "group":2, "type": "project", "href": "http://github.com/kateray/kateray", "year": 13, "size":20},
+    {"id": "homepage", "text": "this page", "group":2, "type": "project", "href": "http://github.com/kateray/kateray", "year": 13, "size":20, "explanation": "<div>I'm interested in a lot of different things, and sometimes it's hard for me to explain my story. I made this page to reflect the network of ideas and connections that bring together the work I’ve done.</div><div class='year'>2013</div>"},
     {"id": "sem-doc", "group":4, "text": "Web 3.0: a story about the semantic web", "type": "project", "href": "http://vimeo.com/11529540", "year": 10, "size":22, "explanation": "<div>A documentary about the Semantic Web. Interviews with Tim Berners-Lee, Clay Shirky, David Weinberger, and others.</div><div class='year'>2010</div>"},
     {"id": "borges", "text": "Jorge Luis Borges", "type": "person"},
     {"id": "tbl", "text": "Tim Berners-Lee", "type": "person"},
     {"id": "tbl-book-1", "text": "Weaving The Web", "type": "book"},
     {"id": "benkler", "text": "Yochai Benkler", "type": "person"},
     {"id": "democracy", "text": "Internet & Democracy", "type": "idea"},
-    {"id": "connections", "text": "connect disparate ideas", "type": "idea"},
+    {"id": "connections", "text": "connect knowledge to spark new ideas", "type": "idea"},
     {"id": "games", "text": "games", "type": "idea"},
     {"id": "raphael", "text": "Raphaël.js", "group": 2, "type": "subject"},
     {"id": "tufte", "text": "Edward Tufte", "group": 2, "type": "person"},
@@ -89,7 +89,6 @@
     {"source": "philosophy", "target": "logic"},
     {"source": "logic", "target": "sem-doc"},
     {"source": "storytelling", "target": "scrollkit"},
-    {"source": "javascript", "target": "scrollkit"},
     {"source": "storytelling", "target": "sem-doc"},
     {"source": "collaboration", "target": "nerdcollider"},
     {"source": "collaboration", "target": "tytc"},
@@ -147,7 +146,10 @@
     {"source": "collaboration", "target": "scrollkit"},
     {"source": "sem-doc", "target": "journalism"},
     {"source": "qs", "target": "psychology"},
-    {"source": "qs", "target": "alongside"}
+    {"source": "qs", "target": "alongside"},
+    {"source": "homepage", "target": "node-js"},
+    {"source": "backbone", "target": "tytc"},
+    {"source": "backbone", "target": "scrollkit"}
 
   ]
 }
