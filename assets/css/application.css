@@ -12,6 +12,7 @@ body {
 
 #key {
   position: fixed;
+  font-size: 20px;
   top: 20px;
   right: 20px;
 }
@@ -20,16 +21,9 @@ body {
   cursor: pointer;
 }
 
-a:hover {
-  color: #385299;
-}
-
 .node {
-  cursor: pointer;
   background-color: #e2e2e2;
-}
-.node.general {
-  font-size: 15px;
+  font-size: 10px;
 }
 
 .link {
@@ -43,13 +37,7 @@ a:hover {
   font-size: 30px;
 }
 
-.node.url {
-  font-size: 10px;
-}
 
-.node.book {
-  font-size: 10px;
-}
 .node.essay {
   font-size: 15px;
 }

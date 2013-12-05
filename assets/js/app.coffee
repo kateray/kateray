@@ -1,47 +1,21 @@
-
-
-collide = (graph) ->
-  quadtree = d3.geom.quadtree(graph.nodes)
-  (d) ->
-    that = this
-    h = this.getBBox().height/2
-    w = this.getBBox().width/4
-
-    console.log this.getBBox()
-    nx1 = d.x - w
-    nx2 = d.x + w
-    ny1 = d.y - h
-    ny2 = d.y + h
-
-    quadtree.visit (quad, x1, y1, x2, y2) ->
-      if quad.point and (quad.point isnt d)
-
-
-        x = quad.point.x - d.x
-        y = quad.point.y - d.y
-        ry = h + quad.point.ry
-        rx = w + quad.point.rx
-        if Math.abs(x) < rx and Math.abs(y) < ry
-          l = Math.sqrt(x * x + y * y)
-          l = (l - rx) / rx * .5
-          d.x += x *= l
-          d.y += y *= l
-          quad.point.x += x
-          quad.point.y += y
-
-          # that.setAttribute("transform", "translate(" + 0 + "," + 5 + ")");
-
-      x1 > nx2 or x2 < nx1 or y1 > ny2 or y2 < ny1
+App = {}
+App.category = null
 
 nodeOpacity = (n) ->
-  if n.type == "center"
-    1
-  else if n.type == "project"
-    0.6
-  else if n.type == "subject"
-    0.13
+  if App.category
+    if App.category == n.type
+      1
+    else
+      0.1
   else
-    0.2
+    if n.type == "center"
+      1
+    else if n.type == "project"
+      0.6
+    else if n.type == "subject"
+      0.13
+    else
+      0.2
 
 nodeColor = (n) ->
   if n.type == "subject"
@@ -66,23 +40,21 @@ nodeColor = (n) ->
     "#000000"
 
 nodeFontSize = (n) ->
-  if n.type == "center"
-    "60px"
-  else if n.type == "subject"
-    "16px"
-  else if n.type == "project"
-    "#{n.size}px"
-  else if n.type == "url"
-    "10px"
-  else if n.type == "book"
-    "10px"
-  else
-    "15px"
+  switch n.type
+    when "center"
+      "60px"
+    when "subject"
+      "16px"
+    when "essay"
+      "15px"
+    when "idea"
+      "15px"
+    when "project"
+      "#{n.size}px"
+    else
+      "10px"
 
 $ ->
-  App = {}
-  App.category = null
-
   width = $(window).width()
   height = $(window).height()
 
@@ -92,22 +64,10 @@ $ ->
       l.target = _.findWhere(data.nodes, {id: l.target})
 
     _.each data.nodes, (n) ->
-      switch n.type
-        when "center"
-          n.fixed = true
-          n.x = width/2
-          n.y = height/2
-          n.rx = 70
-          n.ry = 20
-        # when "project"
-        #   n.rx = 50
-        #   n.ry = 20
-        # when "essay"
-        #   n.rx = 50
-        #   n.ry = 15
-        else
-          n.rx = 30
-          n.ry = 10
+      if n.type == "center"
+        n.fixed = true
+        n.x = width/2
+        n.y = height/2
 
     data
 
@@ -182,8 +142,15 @@ $ ->
       .style("text-anchor", "middle")
       .call(force.drag)
 
+
+    updateNodeOpacity = ->
+      node.style "opacity", (n) ->
+        nodeOpacity(n)
+
     node.on "mouseover", (d) ->
-      return if App.category
+      if d.href
+        $(this).attr('color', 'blue')
+
       link.style "stroke-width", (l) ->
         if d is l.source or d is l.target
           0.5
@@ -202,23 +169,18 @@ $ ->
           nodeOpacity(n)
 
     node.on "mouseout", (d) ->
-      return if App.category
       link.style "stroke-width", 0.05
-      node.style "opacity", nodeOpacity
+      updateNodeOpacity()
+
 
     categoryOff = ->
       App.category = null
       $('.category').css('color', 'black')
-      node.style "opacity", (n) ->
-        nodeOpacity(n)
+      updateNodeOpacity()
 
     categoryOn = ->
       $('.category[data='+App.category+']').css('color', 'purple')
-      node.style "opacity", (n) ->
-        if n.type == App.category
-          1
-        else
-          0.1
+      updateNodeOpacity()
 
     $('.category').click ->
       category = $(this).attr('data')
