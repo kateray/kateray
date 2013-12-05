@@ -160,7 +160,7 @@ $ ->
         )
           1
         else
-          nodeOpacity(n)
+          0.1
 
     node.on "mouseout", (d) ->
       link.style "stroke-width", 0.05

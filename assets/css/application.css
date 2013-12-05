@@ -28,7 +28,7 @@ body {
   padding: 15px;
   font-size: 16px;
   line-height: 1.6;
-  transition: opacity .4s linear;
+  transition: opacity .5s linear;
 }
 
 .year {
