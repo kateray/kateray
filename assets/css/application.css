@@ -28,6 +28,7 @@ body {
   padding: 15px;
   font-size: 16px;
   line-height: 1.6;
+  display: none;
   transition: opacity .5s linear;
 }
 

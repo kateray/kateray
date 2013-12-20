@@ -55,6 +55,7 @@ nodeFontSize = (n) ->
       "10px"
 
 $ ->
+  $('#explanation').show()
   width = $(window).width()
   height = $(window).height()
 
