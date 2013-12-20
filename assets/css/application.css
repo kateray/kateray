@@ -12,7 +12,7 @@ body {
 
 #key {
   position: fixed;
-  font-size: 20px;
+  font-size: 16px;
   top: 20px;
   left: 20px;
 }
@@ -30,6 +30,33 @@ body {
   line-height: 1.6;
   display: none;
   transition: opacity .5s linear;
+}
+
+#contact {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+}
+
+#key a {
+  width: 25px;
+  height: 25px;
+  display: block;
+  background-position:center center;
+  background-repeat:no-repeat;
+  padding: 3px 5px;
+}
+
+#contact-twitter {
+  background-image: url("/images/twitter.png");
+}
+
+#contact-github {
+  background-image: url("/images/github.png");
+}
+
+#contact-mail {
+  background-image: url("/images/mail.png");
 }
 
 .year {
