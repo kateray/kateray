@@ -64,7 +64,8 @@
     {"id": "flow", "text": "Flow", "type": "book", "group":3, "href": "http://www.amazon.com/Flow-The-Psychology-Optimal-Experience/dp/0061339202"},
     {"id": "play", "text": "make creative work feel like play", "type": "idea"},
     {"id": "shirky-book", "text": "Here Comes Everybody", "type": "book", "href": "http://www.amazon.com/Here-Comes-Everybody-Organizing-Organizations/dp/0143114948"},
-    {"id": "shirky", "text": "Clay Shirky", "type": "person"}
+    {"id": "shirky", "text": "Clay Shirky", "type": "person"},
+    {"id": "ze-frank", "text": "Ze Frank", "type": "person"}
 
   ],
   "links": [
