@@ -1,6 +1,6 @@
 ## Usage
 
-$ node app
+$ node server
 
 ## TODO
 

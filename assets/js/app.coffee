@@ -96,16 +96,16 @@ $ ->
 
     force = d3.layout.force()
       .size([width, height])
-      .gravity(0.3)
+      .gravity(0.5)
       .nodes(graph.nodes)
       .links(graph.links)
       .charge(-1800)
       .linkStrength( (d) ->
-        strength = 0.1
+        strength = 0.05
 
         if d.source.group && d.target.group
           if d.source.group == d.target.group
-            strength = 1.3
+            strength = 1
           else
             strength = 0.01
 
