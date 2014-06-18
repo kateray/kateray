@@ -67,7 +67,8 @@
     {"id": "betabeat-nc", "text": "BetaBeat: When Nerds Collide", "type": "press", "href": "http://betabeat.com/2011/03/buy-local-when-nerds-collide"},
     {"id": "tc-semweb", "text": "TechCrunch: Web 3.0, The Movie", "type": "press", "href": "http://techcrunch.com/2010/05/10/web-30-movie"},
     {"id": "mashable-sk", "text": "Mashable: How to Create Websites Without Learning to Code", "type": "press", "href": "http://mashable.com/2013/06/26/create-websites-without-code-scroll-kit"},
-    {"id": "nieman-sk", "text": "Nieman Lab: Meet Scroll...", "type": "press", "href": "http://www.niemanlab.org/2011/10/meet-scroll-a-new-tool-that-wants-to-de-templatize-the-news-web"}
+    {"id": "nieman-sk", "text": "Nieman Lab: Meet Scroll...", "type": "press", "href": "http://www.niemanlab.org/2011/10/meet-scroll-a-new-tool-that-wants-to-de-templatize-the-news-web"},
+    {"id": "tytc-post", "text": "Don’t Believe Anyone Who Tells You Learning To Code Is Easy", "type": "essay", "href": "http://techcrunch.com/2014/05/24/dont-believe-anyone-who-tells-you-learning-to-code-is-easy"}
   ],
 
   "links": [
@@ -165,7 +166,8 @@
     {"source": "tc-semweb", "target": "sem-doc"},
     {"source": "betabeat-nc", "target": "nerdcollider"},
     {"source": "mashable-sk", "target": "scrollkit"},
-    {"source": "nieman-sk", "target": "scrollkit"}
+    {"source": "nieman-sk", "target": "scrollkit"},
+    {"source": "tytc", "target": "tytc-post"}
 
   ]
 }

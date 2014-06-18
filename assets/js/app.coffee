@@ -107,7 +107,7 @@ $ ->
           if d.source.group == d.target.group
             strength = 1
           else
-            strength = 0.01
+            strength = 0.02
 
         strength
       )
