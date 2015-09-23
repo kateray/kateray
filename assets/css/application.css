@@ -20,14 +20,15 @@ body.blog {
 
 @media only screen and (max-device-width: 736px)  {
   body.blog {
-    font: 2.5em sans-serif;
+    font: 2.6em sans-serif;
     line-height: 1.5;
     margin: 5% 10%;
     max-width: 100%;
   }
 
   .caption {
-    font-size: 1em;
+    font-size: 0.9em;
+    margin-bottom: 2em;
   }
 }
 
