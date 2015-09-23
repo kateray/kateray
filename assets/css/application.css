@@ -11,6 +11,15 @@ body.blog {
   max-width: 500px;
 }
 
+@media screen and (max-width: 480px) {
+  body.blog {
+    font: 20px sans-serif;
+    margin: 5% 10%;
+    max-width: 600px;
+  }
+
+}
+
 body.blog a {
   text-decoration: none;
   color: #5C005C;
