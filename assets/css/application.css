@@ -11,13 +11,11 @@ body.blog {
   max-width: 500px;
 }
 
-@media only screen and (max-device-width: 736px)  {
+@media only screen and (max-width: 736px)  {
   body.blog {
-    font: 20px sans-serif;
+    font: 2em sans-serif;
     margin: 5% 10%;
-    max-width: 600px;
   }
-
 }
 
 body.blog a {
