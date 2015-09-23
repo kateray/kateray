@@ -13,8 +13,9 @@ body.blog {
 
 @media only screen and (max-width: 736px)  {
   body.blog {
-    font: 2em sans-serif;
+    font: 4em sans-serif;
     margin: 5% 10%;
+    max-width: 100%;
   }
 }
 
