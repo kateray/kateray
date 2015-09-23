@@ -13,7 +13,7 @@ body.blog {
 
 @media only screen and (max-device-width: 736px)  {
   body.blog {
-    font: 4em sans-serif;
+    font: 2em sans-serif;
     margin: 5% 10%;
     max-width: 100%;
   }
