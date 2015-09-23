@@ -15,11 +15,12 @@ body.blog {
   font-size: 14px;
   font-style: italic;
   opacity: .8;
+  margin-bottom: 25px;
 }
 
 @media only screen and (max-device-width: 736px)  {
   body.blog {
-    font: 2.3em sans-serif;
+    font: 2.5em sans-serif;
     margin: 5% 10%;
     max-width: 100%;
   }
