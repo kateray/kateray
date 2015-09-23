@@ -1,7 +1,23 @@
-body {
+body.home {
   background: -webkit-radial-gradient(#dad3e0,#9d94a6);
   font: 10px sans-serif;
   margin: 0px;
+}
+
+body.blog {
+  font: 15px sans-serif;
+  line-height: 1.5;
+  margin: 50px 150px;
+  max-width: 500px;
+}
+
+body.blog a {
+  text-decoration: none;
+  color: #5C005C;
+}
+
+body.blog a:hover {
+  text-decoration: underline;
 }
 
 #github-link {
