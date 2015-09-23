@@ -18,11 +18,16 @@ body.blog {
   margin-bottom: 25px;
 }
 
-@media only screen and (max-device-width: 736px)  {
+@media only screen and (max-width: 736px)  {
   body.blog {
     font: 2.5em sans-serif;
+    line-height: 1.5;
     margin: 5% 10%;
     max-width: 100%;
+  }
+
+  .caption {
+    font-size: 2.5em;
   }
 }
 
