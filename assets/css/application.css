@@ -41,6 +41,10 @@ body.blog a:hover {
   text-decoration: underline;
 }
 
+.node.hover {
+  text-decoration: underline;
+}
+
 #github-link {
   position: fixed;
   bottom: 20px;

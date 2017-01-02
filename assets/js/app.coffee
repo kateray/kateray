@@ -18,8 +18,8 @@ nodeOpacity = (n) ->
       0.2
 
 nodeColor = (n) ->
-  if n.type == "subject"
-    "#6a6a6a"
+  # if n.type == "subject"
+  #   "#6a6a6a"
   # else if n.type == "center"
   #   "#385299"
   # else if n.id == "tytc"
@@ -36,8 +36,8 @@ nodeColor = (n) ->
   #   "#385299"
   # else if n.id == "nerdcollider"
   #   "#385299"
-  else
-    "#000000"
+  # else
+  "#000000"
 
 nodeFontSize = (n) ->
   switch n.type
@@ -143,6 +143,15 @@ $ ->
         nodeOpacity(n)
 
     node.on "mouseover", (d) ->
+      if d.href
+        node.style "fill", (n) ->
+          if d is n
+            "#0000ff"
+        node.attr "class", (n) ->
+          if d is n
+            "node hover " + n.type
+          else
+            "node " + n.type
       if d.explanation
         $('#explanation').html(d.explanation).css('opacity', 0.5)
 
@@ -167,7 +176,9 @@ $ ->
       link.style "stroke-width", 0.05
       updateNodeOpacity()
       $('#explanation').css('opacity', 0)
-
+      node.style "fill", nodeColor
+      node.attr "class", (n) ->
+        "node " + n.type
 
     categoryOff = ->
       App.category = null
