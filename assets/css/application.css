@@ -144,6 +144,7 @@ body.blog a:hover {
 .node.center {
   z-index: 5;
   font-size: 50px;
+  cursor: default;
 }
 .node.project {
   z-index: 4;
@@ -166,4 +167,5 @@ body.blog a:hover {
   color: #c1c1c1;
   text-transform: uppercase;
   font-weight: bold;
+  cursor: default;
 }
