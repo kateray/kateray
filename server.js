@@ -37,4 +37,7 @@ app.get("/data.json", function(req, res) {
   res.send(data);
 })
 var port = process.env.PORT || 3000;
-app.listen(port);
+
+var server = app.listen(port, function () {
+  console.log('listening at http://localhost:%s', port);
+});
