@@ -50,17 +50,20 @@ $(document).ready(function() {
 
     let linkForce = d3.forceLink(data.links)
       .id(function(d) { return d.name; })
+      .distance(10)
+      .strength(0.1)
 
     function boxForce(){
       _.each(data.nodes, function(n) {
         n.x = Math.max(n.width/2, Math.min(width - n.width/2, n.x));
-        n.y = Math.max(n.height, Math.min(height - n.height, n.y));
+        // try to keep y 15px from top and 10px from bottom
+        n.y = Math.max(n.height+15, Math.min(height - n.height-10, n.y));
       });
     }
 
     //based on https://bl.ocks.org/mbostock/4055889
     function rectCollide() {
-      var strength = 0.2;
+      var strength = 0.3;
       var padding = 3;
       var t = data.nodes.length;
       _.times(3, function(){
@@ -85,7 +88,7 @@ $(document).ready(function() {
     }
 
     var simulation = d3.forceSimulation().nodes(data.nodes)
-      .force('charge_force', d3.forceManyBody().strength(-500))
+      .force('charge_force', d3.forceManyBody().strength(-200))
       .force('center_force', d3.forceCenter(width/2, height/2))
       .force("links", linkForce)
       .force("collide", rectCollide)
@@ -120,6 +123,11 @@ $(document).ready(function() {
     node.each(function(d, i){
       data.nodes[i].width = this.getBoundingClientRect().width;
       data.nodes[i].height = this.getBoundingClientRect().height;
+      // fix center node
+      if (data.nodes[i].id === "center") {
+        d.fx = width/2;
+        d.fy = height/2;
+      }
     });
 
     function dragstarted(d) {
