@@ -42,7 +42,8 @@
     {"id": "experiment-bbc", "text": "Is it possible to kick start science?", "type": "press", "href": "http://www.bbc.com/news/science-environment-22615556"},
     {"id": "experiment-nature", "text": "US gun researcher turns to crowd-funding", "type": "press", "href": "http://www.nature.com/news/us-gun-researcher-turns-to-crowd-funding-1.13069"},
     {"id": "experiment-post", "text": "On Oliver Sacks’ Death and Joining Experiment.com", "type": "essay", "href": "http://www.kateray.net/joining-experiment"},
-    {"id": "misinformation-wiki", "text": "The Misinformation Wiki", "type": "project", "href": "https://github.com/kateray/misinformation/wiki", "explanation": "<div>Collection of papers, projects related to misinformation online; an attempt to make sense of this year.</div><div class='year'>2017</div>"}
+    {"id": "misinformation-wiki", "text": "The Misinformation Wiki", "type": "project", "href": "https://github.com/kateray/misinformation/wiki", "explanation": "<div>Collection of papers, projects related to misinformation online; an attempt to make sense of this year.</div><div class='year'>2017</div>"},
+    {"id": "usesthis", "text": "The Setup: Kate Ray", "type": "press", "href": "https://usesthis.com/interviews/kate.ray/"}
   ],
 
   "links": [
@@ -95,6 +96,7 @@
     {"source": "experiment", "target": "experiment-bbc"},
     {"source": "science", "target": "experiment"},
     {"source": "experiment", "target": "experiment-nature"},
-    {"source": "journalism", "target": "misinformation-wiki"}
+    {"source": "journalism", "target": "misinformation-wiki"},
+    {"source": "code", "target": "usesthis"}
   ]
 }
