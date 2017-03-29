@@ -26,7 +26,7 @@ function nodeFontSize(n) {
     case "essay":
       return "15px";
     case "project":
-      return n.size + "px";
+      return "25px";
     default:
       return "12px";
   }

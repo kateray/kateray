@@ -1,7 +1,7 @@
 {
   "nodes": [
     {"id": "center", "text": "kate ray", "group":1, "type":"center"},
-    {"id": "code", "text": "code", "group":2, "type":"subject"},
+    {"id": "code", "text": "data", "group":2, "type":"subject"},
     {"id": "science", "text": "science", "group":3, "type":"subject"},
     {"id": "journalism", "text": "journalism", "group":5, "type":"subject"},
     {"id": "tytc", "text": "teach yourself to code", "group":2, "type":"project", "href": "http://teachyourselftocode.com", "year": 12, "size":22, "explanation": "<div>A link-sharing site for programming resources. While StackOverflow is great for answering specific questions, it actively discourages \"subjective\" ones like requests for good tutorials. I made this for people who don't know where to start.</div><div class='year'>2012</div>"},
@@ -43,7 +43,7 @@
     {"source": "center", "target": "code"},
     {"source": "center", "target": "science"},
     {"source": "center", "target": "journalism"},
-    {"source": "tytc", "target": "code"},
+    {"source": "code", "target": "spyke"},
     {"source": "nerdcollider", "target": "nc-essay-1"},
     {"source": "journalism", "target": "kommons"},
     {"source": "journalism", "target": "nerdcollider"},
@@ -70,8 +70,9 @@
     {"source": "science", "target": "experiment"},
     {"source": "experiment", "target": "experiment-nature"},
     {"source": "journalism", "target": "misinformation-wiki"},
-    {"source": "code", "target": "usesthis"},
+    {"source": "code", "target": "wburg"},
     {"source": "alongside", "target": "alongside-ls"},
-    {"source": "code", "target": "alongside"}
+    {"source": "code", "target": "alongside"},
+    {"source": "code", "target": "homepage"}
   ]
 }
