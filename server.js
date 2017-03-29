@@ -38,6 +38,4 @@ app.get("/data.json", function(req, res) {
 })
 var port = process.env.PORT || 3000;
 
-var server = app.listen(port, function () {
-  console.log('listening at http://localhost:%s', port);
-});
+var server = app.listen(port);
