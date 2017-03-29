@@ -2,6 +2,9 @@
   "name": "kateray",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": "6.6.0"
+  },
   "scripts": {
     "start": "node server.js"
   },
