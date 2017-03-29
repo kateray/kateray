@@ -16,6 +16,12 @@ function getConfig(file){
     return readJsonFileSync(filepath);
 }
 
+var airbrake = require('airbrake').createClient(
+  '140494', // Project ID
+  'b57e26447f79beb22986db6be6ee6c04' // Project key
+);
+airbrake.handleExceptions();
+
 var data = getConfig('data.json')
 var express = require('express');
 var app = express();
