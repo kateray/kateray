@@ -1,14 +1,19 @@
-let App = {};
+var App = {};
 App.category = null;
 
 function nodeOpacity(n){
   if (App.category) {
     return App.category === n.type ? 1 : 0.1;
   } else {
-    if (n.type === "center") return 1;
-    else if (n.type === "project") return 0.5;
-    else if (n.type === "subject") return 0.13;
-    else return 0.2;
+    if (n.type === "center") {
+      return 1;
+    } else if (n.type === "project") {
+      return 0.5;
+    } else if (n.type === "subject") {
+      return 0.13;
+    } else {
+      return 0.2;
+    }
   }
 }
 
@@ -25,7 +30,7 @@ function nodeFontSize(n) {
     default:
       return "12px";
   }
-};
+}
 
 function parseData(data){
   _.each(data.links, function(l) {
@@ -40,18 +45,18 @@ function parseData(data){
 }
 
 $(document).ready(function() {
-  const width = $(window).width()-2;
-  const height = $(window).height()-2;
+  var width = $(window).width()-2;
+  var height = $(window).height()-2;
 
-  let svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+  var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
   d3.json("data.json", function(json) {
-    let data = parseData(json);
+    var data = parseData(json);
 
-    let linkForce = d3.forceLink(data.links)
+    var linkForce = d3.forceLink(data.links)
       .id(function(d) { return d.name; })
       .distance(10)
-      .strength(0.1)
+      .strength(0.1);
 
     function boxForce(){
       _.each(data.nodes, function(n) {
@@ -88,13 +93,13 @@ $(document).ready(function() {
     }
 
     var simulation = d3.forceSimulation().nodes(data.nodes)
-      .force('charge_force', d3.forceManyBody().strength(-200))
-      .force('center_force', d3.forceCenter(width/2, height/2))
+      .force("charge_force", d3.forceManyBody().strength(-200))
+      .force("center_force", d3.forceCenter(width/2, height/2))
       .force("links", linkForce)
       .force("collide", rectCollide)
       .force("box_force", boxForce);
 
-    let link = svg.selectAll(".link")
+    var link = svg.selectAll(".link")
       .data(data.links)
       .enter()
       .append("line")
@@ -102,7 +107,7 @@ $(document).ready(function() {
       .style("opacity", 1)
       .style("stroke-width", 0.05)
 
-    let node = svg.selectAll(".node")
+    var node = svg.selectAll(".node")
       .data(data.nodes)
       .enter()
       .append("svg:a").attr("target", "_blank").attr("xlink:href", function(d){
@@ -147,7 +152,7 @@ $(document).ready(function() {
       d.fy = null;
     }
 
-    let tickActions = function() {
+    var tickActions = function() {
       // moves nodes and links on every tick
       node
         .attr("x", function(d) {
@@ -181,7 +186,7 @@ $(document).ready(function() {
         });
       }
       if (d.explanation) {
-        $('#explanation').html(d.explanation).css('opacity', 0.5);
+        $("#explanation").html(d.explanation).css("opacity", 0.5);
       }
       link.style("stroke-width", function(l) {
         if (d === l.source || d === l.target) {
@@ -213,27 +218,27 @@ $(document).ready(function() {
     node.on("mouseout", function(d) {
       link.style("stroke-width", 0.05);
       updateNodeOpacity();
-      $('#explanation').css('opacity', 0);
+      $("#explanation").css("opacity", 0);
       node.style("fill", "#000000");
       return node.attr("class", function(n) {
         return "node " + n.type;
       });
     });
 
-    let categoryOff = function() {
+    var categoryOff = function() {
       App.category = null;
-      $('.category').css('color', 'black');
+      $(".category").css("color", "black");
       return updateNodeOpacity();
     };
 
-    let categoryOn = function() {
-      $('.category[data=' + App.category + ']').css('color', 'purple');
+    var categoryOn = function() {
+      $(".category[data=" + App.category + "]").css("color", "purple");
       return updateNodeOpacity();
     };
 
-    $('.category').click(function() {
+    $(".category").click(function() {
       var category;
-      category = $(this).attr('data');
+      category = $(this).attr("data");
       if (App.category === category) {
         return categoryOff();
       } else {
