@@ -132,7 +132,7 @@ body.blog a:hover {
 
 .node {
   background-color: #e2e2e2;
-  font-size: 10px;
+  font-size: 12px;
   transition: opacity .1s linear;
 }
 
@@ -142,28 +142,18 @@ body.blog a:hover {
 
 .node.center {
   z-index: 5;
-  font-size: 50px;
+  font-size: 60px;
   cursor: default;
 }
 .node.project {
   z-index: 4;
-  font-size: 30px;
+  font-size: 25px;
 }
-
-
 .node.essay {
   font-size: 15px;
 }
-
-.node.idea {
-  font-style: italic;
-  font-size: 14px;
-  width: 50px;
-}
-
 .node.subject {
   font-size: 16px;
-  color: #c1c1c1;
   text-transform: uppercase;
   font-weight: bold;
   cursor: default;

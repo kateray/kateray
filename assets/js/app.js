@@ -18,21 +18,6 @@ function nodeOpacity(n){
   }
 }
 
-function nodeFontSize(n) {
-  switch (n.type) {
-    case "center":
-      return "60px";
-    case "subject":
-      return "16px";
-    case "essay":
-      return "15px";
-    case "project":
-      return "25px";
-    default:
-      return "12px";
-  }
-}
-
 function parseData(data){
   _.each(data.links, function(l) {
     l.source = _.findWhere(data.nodes, {
@@ -68,7 +53,7 @@ $(document).ready(function() {
         var distX = n.width/2;
         var distY = n.height;
 
-        if (n.y < 150 || n.y > (height-50)) {
+        if (n.y < 250 || n.y > (height-50)) {
           // if point is near top or bottom, constrain x in smaller box
           n.x = Math.max(distX+100, Math.min(width - distX-250, n.x));
         } else {
@@ -154,11 +139,9 @@ $(document).ready(function() {
         return d.href
       })
       .append("text")
-      .text( function(d){return d.text})
       .attr("class", function(d){return "node " + d.type})
-      .style("fill", "#000000")
+      .html( function(d){return d.text})
       .style("opacity", nodeOpacity)
-      .style("font-size", nodeFontSize)
       .style("text-anchor", "middle")
       .call(d3.drag()
         .on("start", dragstarted)
