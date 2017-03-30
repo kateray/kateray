@@ -56,20 +56,23 @@ $(document).ready(function() {
     var linkForce = d3.forceLink(data.links)
       .id(function(d) { return d.name; })
       .distance(10)
-      .strength(0.1);
+      .strength(0.4);
 
+    // keeps nodes from sliding off page
+    // from http://www.puzzlr.org/bounding-box-force-directed-graph/
     function boxForce(){
       _.each(data.nodes, function(n) {
         n.x = Math.max(n.width/2, Math.min(width - n.width/2, n.x));
         // try to keep y 15px from top and 10px from bottom
-        n.y = Math.max(n.height+15, Math.min(height - n.height-10, n.y));
+        n.y = Math.max(n.height+15, Math.min(height - n.height-15, n.y));
       });
     }
 
-    //based on https://bl.ocks.org/mbostock/4055889
+    // keeps nodes from overlapping, by moving their y value
+    // based on https://bl.ocks.org/mbostock/4055889
     function rectCollide() {
-      var strength = 0.3;
-      var padding = 3;
+      var strength = 0.25;
+      var padding = 2;
       var t = data.nodes.length;
       _.times(3, function(){
         for (var i = 0; i < t; ++i) {
@@ -92,9 +95,35 @@ $(document).ready(function() {
       })
     }
 
+    // puts project nodes in a circle with radius 200-300 around center
+    // based on https://bl.ocks.org/davidcdupuis/3f9db940e27e07961fdbaba9f20c79ec
+    function concentricCircles() {
+      var cx = width/2;
+      var cy = height/2;
+      var small_r = 200;
+      var big_r = 300;
+      _.each(data.nodes, function(n) {
+        var strength = 3;
+        var distX = n.x - cx;
+        var distY = n.y - cy;
+        var dist = Math.sqrt(Math.pow(distX,2)+ Math.pow(distY,2));
+        if (n.type === "project") {
+          if ( (Math.pow(n.x-cx,2) + Math.pow(n.y-cy,2)) <= Math.pow(small_r,2) ){
+            // point is inside small circle
+            n.x = cx + distX / dist * small_r;
+            n.y = cy + distY / dist * small_r;
+          } else if ( (Math.pow(n.x-cx, 2) + Math.pow(n.y-cy, 2)) > Math.pow(big_r,2) ){
+            // point is outside big circle
+            n.x = cx + distX / dist * big_r;
+            n.y = cy + distY / dist * big_r;
+          }
+        }
+      });
+    }
+
     var simulation = d3.forceSimulation().nodes(data.nodes)
-      .force("charge_force", d3.forceManyBody().strength(-200))
-      .force("center_force", d3.forceCenter(width/2, height/2))
+      .force("charge", d3.forceManyBody().strength(-2000))
+      .force("concentric", concentricCircles)
       .force("links", linkForce)
       .force("collide", rectCollide)
       .force("box_force", boxForce);
@@ -155,12 +184,8 @@ $(document).ready(function() {
     var tickActions = function() {
       // moves nodes and links on every tick
       node
-        .attr("x", function(d) {
-          return d.x;
-        })
-        .attr("y", function(d) {
-          return d.y;
-        });
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; });
       link
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
