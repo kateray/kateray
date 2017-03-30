@@ -140,7 +140,7 @@ $(document).ready(function() {
       })
       .append("text")
       .attr("class", function(d){return "node " + d.type})
-      .html( function(d){return d.text})
+      .text( function(d){return d.text})
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
       .call(d3.drag()
