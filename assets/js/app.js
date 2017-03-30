@@ -47,6 +47,8 @@ function parseData(data){
 $(document).ready(function() {
   var width = $(window).width()-2;
   var height = $(window).height()-2;
+  var cx = width/2;
+  var cy = height/2;
 
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
@@ -56,15 +58,24 @@ $(document).ready(function() {
     var linkForce = d3.forceLink(data.links)
       .id(function(d) { return d.name; })
       .distance(10)
-      .strength(0.4);
+      .strength(0.2);
 
     // keeps nodes from sliding off page
-    // from http://www.puzzlr.org/bounding-box-force-directed-graph/
+    // based on http://www.puzzlr.org/bounding-box-force-directed-graph/
     function boxForce(){
       _.each(data.nodes, function(n) {
-        n.x = Math.max(n.width/2, Math.min(width - n.width/2, n.x));
-        // try to keep y 15px from top and 10px from bottom
-        n.y = Math.max(n.height+15, Math.min(height - n.height-15, n.y));
+        var distX = n.width/2;
+        var distY = n.height;
+
+        if (n.y < 150 || n.y > (height-50)) {
+          // if point is near top or bottom, constrain x in smaller box
+          n.x = Math.max(distX+100, Math.min(width - distX-250, n.x));
+        } else {
+          // otherwise just keep x 10px from left and right
+          n.x = Math.max(distX+10, Math.min(width - distX-10, n.x));
+        }
+        // keep y 15px from top and bottom
+        n.y = Math.max(distY+15, Math.min(height - distY-15, n.y));
       });
     }
 
@@ -85,8 +96,7 @@ $(document).ready(function() {
               ly = Math.abs(y),
               w = a.width + b.width + padding,
               h = a.height + b.height + padding;
-
-            if (lx < w && ly < h) {
+            if (lx < (w/2) && ly < h) {
               ly = (ly - h) * (y < 0 ? -strength : strength);
               a.vy -= ly, b.vy += ly;
             }
@@ -98,8 +108,6 @@ $(document).ready(function() {
     // puts project nodes in a circle with radius 200-300 around center
     // based on https://bl.ocks.org/davidcdupuis/3f9db940e27e07961fdbaba9f20c79ec
     function concentricCircles() {
-      var cx = width/2;
-      var cy = height/2;
       var small_r = 200;
       var big_r = 300;
       _.each(data.nodes, function(n) {
@@ -122,7 +130,7 @@ $(document).ready(function() {
     }
 
     var simulation = d3.forceSimulation().nodes(data.nodes)
-      .force("charge", d3.forceManyBody().strength(-2000))
+      .force("charge", d3.forceManyBody().strength(-800))
       .force("concentric", concentricCircles)
       .force("links", linkForce)
       .force("collide", rectCollide)
@@ -159,8 +167,11 @@ $(document).ready(function() {
       data.nodes[i].height = this.getBoundingClientRect().height;
       // fix center node
       if (data.nodes[i].id === "center") {
-        d.fx = width/2;
-        d.fy = height/2;
+        d.fx = cx;
+        d.fy = cy;
+      } else {
+        d.x = Math.random()*width;
+        d.y = Math.random()*height;
       }
     });
 
