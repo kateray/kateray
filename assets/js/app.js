@@ -5,14 +5,15 @@ function nodeOpacity(n){
   if (App.category) {
     return App.category === n.type ? 1 : 0.1;
   } else {
-    if (n.type === "center") {
-      return 1;
-    } else if (n.type === "project") {
-      return 0.5;
-    } else if (n.type === "subject") {
-      return 0.13;
-    } else {
-      return 0.2;
+    switch (n.type) {
+      case "center":
+        return 1;
+      case "subject":
+        return 0.13;
+      case "project":
+        return 0.5;
+      default:
+        return 0.2;
     }
   }
 }
@@ -94,9 +95,11 @@ $(document).ready(function() {
               y = a.y + a.vy - b.y - b.vy,
               lx = Math.abs(x),
               ly = Math.abs(y),
-              w = a.width + b.width + padding,
-              h = a.height + b.height + padding;
-            if (lx < (w/2) && ly < h) {
+              // both centered so add widths but divide by 2
+              w = (a.width + b.width + padding)/2,
+              // if a is above b, then use a's height, otherwise b's
+              h = (a.y > b.y) ? (a.height + padding) : (b.height + padding);
+            if (lx < w && ly < h) {
               ly = (ly - h) * (y < 0 ? -strength : strength);
               a.vy -= ly, b.vy += ly;
             }
@@ -165,11 +168,12 @@ $(document).ready(function() {
     node.each(function(d, i){
       data.nodes[i].width = this.getBoundingClientRect().width;
       data.nodes[i].height = this.getBoundingClientRect().height;
-      // fix center node
       if (data.nodes[i].id === "center") {
+        // fix center node
         d.fx = cx;
         d.fy = cy;
       } else {
+        // start other nodes in random position
         d.x = Math.random()*width;
         d.y = Math.random()*height;
       }

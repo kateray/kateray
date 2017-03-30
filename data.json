@@ -31,7 +31,7 @@
     {"id": "wburg-gizmodo", "text": "An App Can Help You Locate the Williamsburg of Your City..", "type": "press", "href": "http://gizmodo.com/this-app-helps-you-locate-the-williamsburg-of-your-city-1768559098"},
     {"id": "wburg-quartz", "text": "A new app helps you find the “Williamsburg”...", "type": "press", "href": "http://qz.com/668089/a-new-app-helps-you-find-the-williamsburg-of-any-city-in-the-world/"},
     {"id": "wburg-lat", "text": "This app points you to Williamsburg-equivalent neighborhoods...", "type": "press", "href": "http://www.latimes.com/travel/deals/la-tr-0522-webbuzz-20160512-snap-story.html"},
-    {"id": "alongside-ls", "text": "Laughing Squid: Alongside, An App to Colorfully Visualize Your Foursquare Relationships", "type": "press", "href": "https://laughingsquid.com/alongside-an-app-to-colorfully-visualize-your-foursquare-relationships/"},
+    {"id": "alongside-ls", "text": "Alongside, An App to Colorfully Visualize Your Foursquare Relationships", "pub": "Laughing Squid", "type": "press", "href": "https://laughingsquid.com/alongside-an-app-to-colorfully-visualize-your-foursquare-relationships/"},
     {"id": "experiment-bbc", "text": "Is it possible to kick start science?", "type": "press", "href": "http://www.bbc.com/news/science-environment-22615556"},
     {"id": "experiment-nature", "text": "US gun researcher turns to crowd-funding", "type": "press", "href": "http://www.nature.com/news/us-gun-researcher-turns-to-crowd-funding-1.13069"},
     {"id": "experiment-post", "text": "On Oliver Sacks’ Death and Joining Experiment.com", "type": "essay", "href": "http://www.kateray.net/joining-experiment"},
