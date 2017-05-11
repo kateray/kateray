@@ -97,12 +97,23 @@ body.blog a:hover {
 }*/
 
 #key a {
+  color: #000;
+  text-decoration: none;
   width: 25px;
   height: 25px;
   display: block;
   background-position:center center;
   background-repeat:no-repeat;
   padding: 5px 5px;
+}
+
+#key a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+#key .category:hover {
+  color: blue;
 }
 
 #contact-twitter {
