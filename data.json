@@ -37,6 +37,7 @@
     {"id": "experiment-post", "text": "On Oliver Sacks’ Death and Joining Experiment.com", "type": "essay", "href": "http://www.kateray.net/joining-experiment"},
     {"id": "misinformation-wiki", "text": "The Misinformation Wiki", "type": "project", "href": "https://github.com/kateray/misinformation/wiki", "explanation": "<div>Collection of papers, projects related to misinformation online; an attempt to make sense of this year.</div><div class='year'>2017</div>"},
     {"id": "usesthis", "text": "The Setup: Kate Ray", "type": "press", "href": "https://usesthis.com/interviews/kate.ray/"},
+    {"id": "bookshelf-technically", "text": "Let these ‘book-mixtapes’ guide your summer reading", "type": "press", "href": "https://technical.ly/brooklyn/2017/07/24/kate-ray-bookshelf-website/"},
     {"id": "bookshelf", "text": "Bookshelf", "type": "project", "href": "https://bookshelf.website/", "explanation": "<div>Make book mixtapes. Used for bookclubs, keeping track of currently reading or recommended books, lists like 'for someone i have yet to meet' or 'theoretical nostalgia for a hypothetical future'</div><div class='year'>2017</div>"}
   ],
 
@@ -74,6 +75,7 @@
     {"source": "code", "target": "wburg"},
     {"source": "alongside", "target": "alongside-ls"},
     {"source": "code", "target": "alongside"},
+    {"source": "bookshelf", "target": "bookshelf-technically"},
     {"source": "code", "target": "homepage"}
   ]
 }
