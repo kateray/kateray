@@ -36,7 +36,6 @@ function makeSimulation(height, width, data){
   var cx = width/2;
   var cy = height/2;
 
-
   // Define all the forces
   var linkForce = d3.forceLink(data.links)
     .id(function(d) { return d.name; })
@@ -148,54 +147,54 @@ function makeSimulation(height, width, data){
     }
   }
 
-  // var handleMouseover = function(d) {
-  //   if (d.href) {
-  //     node.style("fill", function(n) {
-  //       if (d === n) {
-  //         return "#0000ff";
-  //       }
-  //     });
-  //     node.attr("class", function(n) {
-  //       if (d === n) {
-  //         return "node hover " + n.type;
-  //       } else {
-  //         return "node " + n.type;
-  //       }
-  //     });
-  //   }
-  //   if (d.explanation) {
-  //     $("#explanation").html(d.explanation).css("opacity", 0.5);
-  //   }
-  //   link.style("stroke-width", function(l) {
-  //     if (d === l.source || d === l.target) {
-  //       return 0.5;
-  //     } else {
-  //       return 0.05;
-  //     }
-  //   });
-  //   return node.style("opacity", function(n) {
-  //     if (d === n) {
-  //       return 1;
-  //     }
-  //     if (_.find(data.links, function(l) {
-  //       return (d === l.source && n === l.target) || (n === l.source && d === l.target);
-  //     })) {
-  //       return 1;
-  //     } else {
-  //       return 0.1;
-  //     }
-  //   });
-  // }
-  //
-  // var handleMouseout = function(d) {
-  //   link.style("stroke-width", 0.05);
-  //   updateNodeOpacity();
-  //   $("#explanation").css("opacity", 0);
-  //   node.style("fill", "#000000");
-  //   return node.attr("class", function(n) {
-  //     return "node " + n.type;
-  //   });
-  // }
+  var handleMouseover = function(d) {
+    if (d.href) {
+      node.style("fill", function(n) {
+        if (d === n) {
+          return "#0000ff";
+        }
+      });
+      node.attr("class", function(n) {
+        if (d === n) {
+          return "node hover " + n.type;
+        } else {
+          return "node " + n.type;
+        }
+      });
+    }
+    if (d.explanation) {
+      $("#explanation").html(d.explanation).css("opacity", 0.5);
+    }
+    link.style("stroke-width", function(l) {
+      if (d === l.source || d === l.target) {
+        return 0.5;
+      } else {
+        return 0.05;
+      }
+    });
+    return node.style("opacity", function(n) {
+      if (d === n) {
+        return 1;
+      }
+      if (_.find(data.links, function(l) {
+        return (d === l.source && n === l.target) || (n === l.source && d === l.target);
+      })) {
+        return 1;
+      } else {
+        return 0.1;
+      }
+    });
+  }
+
+  var handleMouseout = function(d) {
+    link.style("stroke-width", 0.05);
+    updateNodeOpacity();
+    $("#explanation").css("opacity", 0);
+    node.style("fill", "#000000");
+    return node.attr("class", function(n) {
+      return "node " + n.type;
+    });
+  }
 
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
@@ -204,8 +203,8 @@ function makeSimulation(height, width, data){
     .force("charge", d3.forceManyBody().strength(-800))
     .force("concentric", concentricCircles)
     .force("links", linkForce)
-    // .force("collide", rectCollide)
-    // .force("box_force", boxForce);
+    .force("collide", rectCollide)
+    .force("box_force", boxForce);
 
   var link = svg.selectAll(".link")
     .data(data.links)
@@ -216,26 +215,27 @@ function makeSimulation(height, width, data){
     .style("stroke-width", 0.05)
 
   var node = svg.selectAll(".node")
-    .data(data.nodes, function(d){return d.id})
+    .data(data.nodes, d => d.id)
 
-  node.exit().remove()
-
-  var nodeEnter = node.enter()
-    .append("svg:a").attr("target", "_blank").attr("xlink:href", function(d){
-      return d.href
-    })
+  node = node.enter()
+    // .append("svg:a")
+    // .attr("target", "_blank").attr("xlink:href", function(d){
+    //   return d.href
+    // })
     .append("text")
     .attr("class", function(d){return "node " + d.type})
     .text( function(d){return d.text})
-    // .style("opacity", nodeOpacity)
-    // .style("text-anchor", "middle")
-    // .call(d3.drag()
-    //   .on("start", dragstarted)
-    //   .on("drag", dragged)
-    //   .on("end", dragended));
+    .merge(node)
+    .style("opacity", nodeOpacity)
+    .style("text-anchor", "middle")
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
   var tickActions = function() {
     // moves nodes and links on every tick
-    nodeEnter
+    node
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });
     link
@@ -246,42 +246,38 @@ function makeSimulation(height, width, data){
   }
   simulation.on("tick", tickActions);
 
-  // var nodeEnter = node.enter()
+  node.each(setNodeDimensions)
+  node.on("mouseover", handleMouseover)
+  node.on("mouseout", handleMouseout)
 
-  // nodeEnter.each(setNodeDimensions)
-  // node.on("mouseover", handleMouseover)
-  // node.on("mouseout", handleMouseout)
+  var updateNodeOpacity = function() {
+    return node.style("opacity", function(n) {
+      return nodeOpacity(n);
+    });
+  };
 
-  // var updateNodeOpacity = function() {
-  //   return node.style("opacity", function(n) {
-  //     return nodeOpacity(n);
-  //   });
-  // };
-  //
-  // var categoryOff = function() {
-  //   App.category = null;
-  //   $(".category").css("color", "black");
-  //   return updateNodeOpacity();
-  // };
-  //
-  // var categoryOn = function() {
-  //   $(".category[data=" + App.category + "]").css("color", "purple");
-  //   return updateNodeOpacity();
-  // };
-  //
-  // $(".category").click(function() {
-  //   var category;
-  //   category = $(this).attr("data");
-  //   if (App.category === category) {
-  //     return categoryOff();
-  //   } else {
-  //     categoryOff();
-  //     App.category = category;
-  //     return categoryOn();
-  //   }
-  // });
+  var categoryOff = function() {
+    App.category = null;
+    $(".category").css("color", "black");
+    return updateNodeOpacity();
+  };
 
+  var categoryOn = function() {
+    $(".category[data=" + App.category + "]").css("color", "purple");
+    return updateNodeOpacity();
+  };
 
+  $(".category").click(function() {
+    var category;
+    category = $(this).attr("data");
+    if (App.category === category) {
+      return categoryOff();
+    } else {
+      categoryOff();
+      App.category = category;
+      return categoryOn();
+    }
+  });
 
   var listView = function(){
     simulation.on("tick", null)
@@ -289,63 +285,60 @@ function makeSimulation(height, width, data){
     var projects = data.nodes.filter(function(n){
       return n.type === 'project'
     })
+    node = svg.selectAll(".node")
+      .data(projects, d => d.id)
 
-    console.log(nodeEnter)
-    nodeEnter
-      .data(projects, function(d) {return d.id})
+    node
       .exit()
       .remove()
 
-    nodeEnter
+    node
       .transition()
       .attr("x", 200)
-      // .style("text-anchor", "start")
-    console.log(nodeEnter)
-    link.remove()
 
+    node.on("mouseover", null)
+    node.on("mouseout", null)
+
+    link.remove()
   }
 
   var networkView = function(){
-    link
+
+    link = svg.selectAll(".link")
       .data(data.links)
+
+    link = link
       .enter()
       .append("line")
       .attr("class", "link")
       .style("opacity", 1)
       .style("stroke-width", 0.05)
 
-    console.log(data.nodes)
+    link
+      .exit()
+      .remove()
 
-    nodeEnter.remove()
-    
-    node
-      .data(data.nodes, function(d){console.log(d.id); return d.id})
-      // .exit()
-      // .remove()
+    node = svg.selectAll(".node")
+      .data(data.nodes, d => {return d.id})
 
-    nodeEnter = node
-      .enter()
-      // .merge(node)
-      // .merge(nodeEnter)
-      // .append("div")
-      // .attr("class", function(d){
-      //   return 'test ' + d.id
+    node = node.enter()
+      // .append("svg:a")
+      // .attr("target", "_blank").attr("xlink:href", function(d){
+      //   return d.href
       // })
-      .append("svg:a").attr("target", "_blank").attr("xlink:href", function(d){
-        return d.href
-      })
       .append("text")
       .attr("class", function(d){return "node " + d.type})
       .text( function(d){return d.text})
-      // .style("opacity", nodeOpacity)
-      // .style("text-anchor", "middle")
-      // .merge(node)
+      .merge(node)
+      .style("opacity", nodeOpacity)
+      .style("text-anchor", "middle")
 
-    // node.each(setNodeDimensions)
-    // node.on("mouseover", handleMouseover)
-    // node.on("mouseout", handleMouseout)
+    node.on("mouseover", handleMouseover)
+    node.on("mouseout", handleMouseout)
+    node
+      .exit()
+      .remove()
 
-    // simulation.nodes(data.nodes)
     simulation.on("tick", tickActions);
     simulation.alpha(1).restart()
   }
