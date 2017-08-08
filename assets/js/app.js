@@ -284,7 +284,10 @@ function makeSimulation(height, width, data){
 
     var projects = data.nodes.filter(function(n){
       return n.type === 'project'
+    }).sort(function(a, b){
+      return b.year - a.year
     })
+
     node = svg.selectAll(".node")
       .data(projects, d => d.id)
 
@@ -293,8 +296,14 @@ function makeSimulation(height, width, data){
       .remove()
 
     node
+      .style("text-anchor", "start")
       .transition()
+      .duration(500)
       .attr("x", 200)
+      .attr("y", function(d){
+        var i = projects.indexOf(d)
+        return 100+ i*50
+      })
 
     node.on("mouseover", null)
     node.on("mouseout", null)
