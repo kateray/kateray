@@ -41,7 +41,7 @@ body.blog a:hover {
   text-decoration: underline;
 }
 
-.node.hover {
+.nodetext.hover {
   text-decoration: underline;
 }
 
@@ -144,6 +144,9 @@ body.blog a:hover {
 .node {
   background-color: #e2e2e2;
   font-size: 12px;
+}
+
+.nodetext {
   transition: opacity .1s linear;
 }
 

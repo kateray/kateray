@@ -62,7 +62,7 @@ function makeSimulation(height, width, data){
 
   // keeps nodes from overlapping, by moving their y value
   function rectCollide() {
-    var strength = 0.25;
+    var strength = 0.1;
     var padding = 2;
     var t = data.nodes.length;
     _.times(3, function(){
@@ -149,51 +149,55 @@ function makeSimulation(height, width, data){
 
   var handleMouseover = function(d) {
     if (d.href) {
-      node.style("fill", function(n) {
+      nodeEnter.style("fill", function(n) {
         if (d === n) {
           return "#0000ff";
         }
       });
-      node.attr("class", function(n) {
+      nodeEnter.attr("class", function(n) {
         if (d === n) {
-          return "node hover " + n.type;
+          return "hover nodetext"
         } else {
-          return "node " + n.type;
+          return "nodetext"
         }
       });
     }
-    if (d.explanation) {
-      $("#explanation").html(d.explanation).css("opacity", 0.5);
+    if (viewStyle === 'network') {
+      if (d.explanation) {
+        $("#explanation").html(d.explanation).css("opacity", 0.5);
+      }
+      link.style("stroke-width", function(l) {
+        if (d === l.source || d === l.target) {
+          return 0.5;
+        } else {
+          return 0.05;
+        }
+      });
+      return nodeEnter.style("opacity", function(n) {
+        if (d === n) {
+          return 1;
+        }
+        if (_.find(data.links, function(l) {
+          return (d === l.source && n === l.target) || (n === l.source && d === l.target);
+        })) {
+          return 1;
+        } else {
+          return 0.1;
+        }
+      });
     }
-    link.style("stroke-width", function(l) {
-      if (d === l.source || d === l.target) {
-        return 0.5;
-      } else {
-        return 0.05;
-      }
-    });
-    return node.style("opacity", function(n) {
-      if (d === n) {
-        return 1;
-      }
-      if (_.find(data.links, function(l) {
-        return (d === l.source && n === l.target) || (n === l.source && d === l.target);
-      })) {
-        return 1;
-      } else {
-        return 0.1;
-      }
-    });
   }
 
   var handleMouseout = function(d) {
-    link.style("stroke-width", 0.05);
-    updateNodeOpacity();
-    $("#explanation").css("opacity", 0);
-    node.style("fill", "#000000");
-    return node.attr("class", function(n) {
-      return "node " + n.type;
-    });
+    nodeEnter.style("fill", "#000000");
+    nodeEnter.attr("class", function(n){
+      return "nodetext"
+    })
+    if (viewStyle === 'network') {
+      link.style("stroke-width", 0.05);
+      updateNodeOpacity();
+      $("#explanation").css("opacity", 0);
+    }
   }
 
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
@@ -225,6 +229,7 @@ function makeSimulation(height, width, data){
       return d.href
     })
     .append("text")
+    .attr("class", "nodetext")
     .text( function(d){return d.text})
     .style("opacity", nodeOpacity)
     .style("text-anchor", "middle")
@@ -247,11 +252,11 @@ function makeSimulation(height, width, data){
   simulation.on("tick", tickActions);
 
   nodeEnter.each(setNodeDimensions)
-  // node.on("mouseover", handleMouseover)
-  // node.on("mouseout", handleMouseout)
+  nodeEnter.on("mouseover", handleMouseover)
+  nodeEnter.on("mouseout", handleMouseout)
 
   var updateNodeOpacity = function() {
-    return node.style("opacity", function(n) {
+    return nodeEnter.style("opacity", function(n) {
       return nodeOpacity(n);
     });
   };
@@ -281,9 +286,10 @@ function makeSimulation(height, width, data){
 
   var listView = function(){
     simulation.stop()
+    simulation.alphaTarget(0)
 
     var projects = data.nodes.filter(function(n){
-      return n.type === 'project'
+      return n.type === 'project' || n.type === 'center'
     }).sort(function(a, b){
       return b.year - a.year
     })
@@ -296,6 +302,7 @@ function makeSimulation(height, width, data){
       .remove()
 
     nodeEnter
+      .style("opacity", 1)
       .style("text-anchor", "start")
       .transition()
       .duration(500)
@@ -305,13 +312,14 @@ function makeSimulation(height, width, data){
         return 100+ i*50
       })
 
-    // node.on("mouseover", null)
-    // node.on("mouseout", null)
-
     link.remove()
   }
 
   var networkView = function(){
+
+    var restartSim = function(){
+      simulation.alphaTarget(0.5).restart()
+    }
 
     link = svg.selectAll(".link")
       .data(data.links)
@@ -330,6 +338,17 @@ function makeSimulation(height, width, data){
     node = svg.selectAll(".node")
       .data(data.nodes, d => {return d.id})
 
+    nodeEnter
+      .transition()
+      .duration(500)
+      .attr("x", function(d){
+        return d.x
+      })
+      .attr("y", function(d){
+        return d.y
+      })
+      .on("end", restartSim);
+
     nodeEnter = node.enter()
       .append("svg:a")
       .attr("class", function(d){return "node " + d.type})
@@ -337,18 +356,18 @@ function makeSimulation(height, width, data){
         return d.href
       })
       .append("text")
+      .attr("class", "nodetext")
       .text( function(d){return d.text})
       .merge(nodeEnter)
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
 
-    // node.on("mouseover", handleMouseover)
-    // node.on("mouseout", handleMouseout)
+    nodeEnter.on("mouseover", handleMouseover)
+    nodeEnter.on("mouseout", handleMouseout)
+
     node
       .exit()
       .remove()
-
-    simulation.alphaTarget(0.1).restart()
   }
 
   $('.toggle-view').click(function(){
