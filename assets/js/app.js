@@ -222,8 +222,9 @@ function makeSimulation(height, width, data){
     .data(data.nodes, d => d.id)
 
   var nodeEnter = node.enter()
-    .append("svg:a")
+    .append('g')
     .attr("class", function(d){return "node " + d.type})
+    .append("svg:a")
     .attr("target", "_blank")
     .attr("xlink:href", function(d){
       return d.href
@@ -285,6 +286,15 @@ function makeSimulation(height, width, data){
   });
 
   var listView = function(){
+
+    // var done = false
+    //
+    // var ready = function(){
+    //   if (!done) {
+    //     done = true
+    //
+    // }
+
     simulation.stop()
     simulation.alphaTarget(0)
 
@@ -309,14 +319,40 @@ function makeSimulation(height, width, data){
       .attr("x", 200)
       .attr("y", function(d){
         var i = projects.indexOf(d)
-        return 100+ i*50
+        return 100+ i*100
+      })
+      .on("end", function(d){
+        node.selectAll(".list-explanation-container").attr('opacity', 1)
+      });
+
+    node
+      .append('foreignObject')
+      .attr('class', 'list-explanation-container')
+      .attr('opacity', 0)
+      .attr('x', 200)
+      .attr('y', function(d){
+        var i = projects.indexOf(d)
+        return 110+ i*100
+      })
+      .attr('width', 500)
+      .attr('height', 200)
+      .append("xhtml:div")
+      .attr('class', 'list-explanation')
+      .html(function(d){
+        return d.explanation
       })
 
+    svg
+      .attr('height', function(){
+        return 110+ projects.length*100
+      })
+      .attr('width', function(){
+        return $(window).width()-2
+      })
     link.remove()
   }
 
   var networkView = function(){
-
     var restartSim = function(){
       simulation.alphaTarget(0.5).restart()
     }
@@ -350,24 +386,40 @@ function makeSimulation(height, width, data){
       .on("end", restartSim);
 
     nodeEnter = node.enter()
-      .append("svg:a")
+      .append("g")
       .attr("class", function(d){return "node " + d.type})
+      .append("svg:a")
       .attr("target", "_blank").attr("xlink:href", function(d){
         return d.href
       })
       .append("text")
       .attr("class", "nodetext")
       .text( function(d){return d.text})
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended))
       .merge(nodeEnter)
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
 
+
     nodeEnter.on("mouseover", handleMouseover)
     nodeEnter.on("mouseout", handleMouseout)
+
+    svg.selectAll('.list-explanation-container').remove()
 
     node
       .exit()
       .remove()
+
+    svg
+      .attr('height', function(){
+        return height
+      })
+      .attr('width', function(){
+        return $(window).width()-2
+      })
   }
 
   $('.toggle-view').click(function(){

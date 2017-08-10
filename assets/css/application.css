@@ -72,30 +72,6 @@ body.blog a:hover {
   transition: opacity .5s linear;
 }
 
-.category {
-  padding: 5px;
-}
-/*.category[data="project"] {
-  background: #AA9BB3;
-
-}
-.category[data="essay"] {
-  background: #B1A2BA;
-
-}
-.category[data="idea"] {
-  background: #B9A9C2;
-}
-.category[data="url"] {
-  background: #C0AFC9;
-}
-.category[data="book"] {
-  background: #C7B6D1;
-}*/
-/*a:hover {
-  text-decoration: underline;
-}*/
-
 #key a {
   color: #000;
   text-decoration: none;
@@ -112,7 +88,11 @@ body.blog a:hover {
   color: blue;
 }
 
-#key .category:hover {
+#key .control {
+  padding: 5px;
+  cursor: pointer;
+}
+#key .control:hover {
   color: blue;
 }
 
@@ -137,10 +117,6 @@ body.blog a:hover {
   font-style: italic;
 }
 
-.category {
-  cursor: pointer;
-}
-
 .node {
   background-color: #e2e2e2;
   font-size: 12px;
@@ -150,6 +126,13 @@ body.blog a:hover {
   transition: opacity .1s linear;
 }
 
+.list-explanation {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.list-explanation-container {
+  transition: opacity .5s linear;
+}
 .link {
   stroke: #000;
 }
