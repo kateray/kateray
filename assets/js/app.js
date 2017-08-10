@@ -217,15 +217,15 @@ function makeSimulation(height, width, data){
   var node = svg.selectAll(".node")
     .data(data.nodes, d => d.id)
 
-  node = node.enter()
-    // .append("svg:a")
-    // .attr("target", "_blank").attr("xlink:href", function(d){
-    //   return d.href
-    // })
-    .append("text")
+  var nodeEnter = node.enter()
+    .append("svg:a")
     .attr("class", function(d){return "node " + d.type})
+    .attr("target", "_blank")
+    .attr("xlink:href", function(d){
+      return d.href
+    })
+    .append("text")
     .text( function(d){return d.text})
-    .merge(node)
     .style("opacity", nodeOpacity)
     .style("text-anchor", "middle")
     .call(d3.drag()
@@ -235,7 +235,7 @@ function makeSimulation(height, width, data){
 
   var tickActions = function() {
     // moves nodes and links on every tick
-    node
+    nodeEnter
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; });
     link
@@ -246,9 +246,9 @@ function makeSimulation(height, width, data){
   }
   simulation.on("tick", tickActions);
 
-  node.each(setNodeDimensions)
-  node.on("mouseover", handleMouseover)
-  node.on("mouseout", handleMouseout)
+  nodeEnter.each(setNodeDimensions)
+  // node.on("mouseover", handleMouseover)
+  // node.on("mouseout", handleMouseout)
 
   var updateNodeOpacity = function() {
     return node.style("opacity", function(n) {
@@ -280,7 +280,7 @@ function makeSimulation(height, width, data){
   });
 
   var listView = function(){
-    simulation.on("tick", null)
+    simulation.stop()
 
     var projects = data.nodes.filter(function(n){
       return n.type === 'project'
@@ -295,7 +295,7 @@ function makeSimulation(height, width, data){
       .exit()
       .remove()
 
-    node
+    nodeEnter
       .style("text-anchor", "start")
       .transition()
       .duration(500)
@@ -305,8 +305,8 @@ function makeSimulation(height, width, data){
         return 100+ i*50
       })
 
-    node.on("mouseover", null)
-    node.on("mouseout", null)
+    // node.on("mouseover", null)
+    // node.on("mouseout", null)
 
     link.remove()
   }
@@ -330,26 +330,25 @@ function makeSimulation(height, width, data){
     node = svg.selectAll(".node")
       .data(data.nodes, d => {return d.id})
 
-    node = node.enter()
-      // .append("svg:a")
-      // .attr("target", "_blank").attr("xlink:href", function(d){
-      //   return d.href
-      // })
-      .append("text")
+    nodeEnter = node.enter()
+      .append("svg:a")
       .attr("class", function(d){return "node " + d.type})
+      .attr("target", "_blank").attr("xlink:href", function(d){
+        return d.href
+      })
+      .append("text")
       .text( function(d){return d.text})
-      .merge(node)
+      .merge(nodeEnter)
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
 
-    node.on("mouseover", handleMouseover)
-    node.on("mouseout", handleMouseout)
+    // node.on("mouseover", handleMouseover)
+    // node.on("mouseout", handleMouseout)
     node
       .exit()
       .remove()
 
-    simulation.on("tick", tickActions);
-    simulation.alpha(1).restart()
+    simulation.alphaTarget(0.1).restart()
   }
 
   $('.toggle-view').click(function(){
