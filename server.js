@@ -40,21 +40,41 @@ app.get("/joining-experiment", function(req, res) {
   });
 });
 
-app.get("/data", function(req, res) {
-  var url = 'https://spreadsheets.google.com/feeds/list/1XWRuM1aIEYXyqw4JMdQrDkpoppXPcIPE58vKqbeOjBE/od6/public/values?alt=json'
-  console.log('um')
-  https.get(url, res => {
-    console.log(res)
-    res.setEncoding("utf8");
-    let body = "";
-    res.on("data", data => {
-      body += data;
-    });
-    res.on("end", () => {
-      body = JSON.parse(body);
-      res.send(body)
+var url = 'https://spreadsheets.google.com/feeds/list/1XWRuM1aIEYXyqw4JMdQrDkpoppXPcIPE58vKqbeOjBE/od6/public/values?alt=json'
+https.get(url, res => {
+  res.setEncoding("utf8");
+  var responseData = "";
+  res.on("data", data => {
+    responseData += data;
+  });
+  res.on("end", () => {
+    var respData = []
+    responseData = JSON.parse(responseData)['feed']['entry'];
+    responseData.forEach( (d) => {
+      var r = {}
+      r['id'] = d['gsx$id']['$t']
+      r['text'] = d['gsx$text']['$t']
+      r['type'] = d['gsx$type']['$t']
+      r['href'] = d['gsx$href']['$t']
+      r['startyear'] = d['gsx$startyear']['$t']
+      r['endyear'] = d['gsx$endyear']['$t']
+      r['inactive'] = d['gsx$inactive']['$t']
+      r['explanation'] = d['gsx$explanation']['$t']
+      r['links'] = d['gsx$links']['$t']
+      respData.push(r)
+    })
+    fs.writeFile("data.json", JSON.stringify(respData), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        console.log("The file was saved!");
     });
   });
+})
+
+app.get("/data.json", function(req, res) {
+  var data = getConfig('data.json')
+  res.send(data);
 })
 var port = process.env.PORT || 3000;
 

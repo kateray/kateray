@@ -117,6 +117,10 @@ body.blog a:hover {
   font-style: italic;
 }
 
+.list-explanation .year {
+  float: none;
+}
+
 .node {
   background-color: #e2e2e2;
   font-size: 12px;

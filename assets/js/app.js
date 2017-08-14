@@ -20,31 +20,41 @@ function nodeOpacity(n){
   }
 }
 
-function parseData(data){
-  _.each(data.links, function(l) {
-    l.source = _.findWhere(data.nodes, {
-      id: l.source
-    });
-    return l.target = _.findWhere(data.nodes, {
-      id: l.target
-    });
-  });
-  return data;
+function makeYearString(d){
+  var year = d.startyear
+  if (d.endyear) {
+    year = `${year}-${d.endyear}`
+  }
+  if (d.inactive){
+    year = `${year} (inactive)`
+  }
+  return year
 }
 
 function makeSimulation(height, width, data){
   var cx = width/2;
   var cy = height/2;
 
+  var links = []
+  data.forEach(function(d) {
+    d.links.split(',').forEach(function(l){
+      if (l !== '') {
+        var source = data.filter( (x) => {return d.id === x.id})
+        var target = data.filter( (x) => {return l === x.id})
+        links.push({source: source[0], target: target[0]})
+      }
+    })
+  });
+
   // Define all the forces
-  var linkForce = d3.forceLink(data.links)
+  var linkForce = d3.forceLink(links)
     .id(function(d) { return d.name; })
     .distance(10)
     .strength(0.2);
 
   // keeps nodes from sliding off page
   function boxForce(){
-    _.each(data.nodes, function(n) {
+    data.forEach(function(n) {
       var distX = n.width/2;
       var distY = n.height;
 
@@ -64,12 +74,12 @@ function makeSimulation(height, width, data){
   function rectCollide() {
     var strength = 0.1;
     var padding = 2;
-    var t = data.nodes.length;
-    _.times(3, function(){
+    var t = data.length;
+    for (var ii=0; ii<3; ii++){
       for (var i = 0; i < t; ++i) {
-        var a = data.nodes[i];
+        var a = data[i];
         for (var j = i + 1; j < t; ++j) {
-          var b = data.nodes[j],
+          var b = data[j],
             x = a.x + a.vx - b.x - b.vx,
             y = a.y + a.vy - b.y - b.vy,
             lx = Math.abs(x),
@@ -84,14 +94,14 @@ function makeSimulation(height, width, data){
           }
         }
       }
-    })
+    }
   }
 
   // puts project nodes in a circle with radius 200-300 around center
   function concentricCircles() {
     var smallRadius = 200;
     var bigRadius = 300;
-    _.each(data.nodes, function(n) {
+    data.forEach(function(n) {
       var strength = 3;
       var distX = n.x - cx;
       var distY = n.y - cy;
@@ -134,9 +144,9 @@ function makeSimulation(height, width, data){
   }
 
   var setNodeDimensions = function(d, i) {
-    data.nodes[i].width = this.getBoundingClientRect().width;
-    data.nodes[i].height = this.getBoundingClientRect().height;
-    if (data.nodes[i].id === "center") {
+    data[i].width = this.getBoundingClientRect().width;
+    data[i].height = this.getBoundingClientRect().height;
+    if (data[i].id === "center") {
       // fix center node
       d.fx = cx;
       d.fy = cy;
@@ -164,7 +174,7 @@ function makeSimulation(height, width, data){
     }
     if (viewStyle === 'network') {
       if (d.explanation) {
-        $("#explanation").html(d.explanation).css("opacity", 0.5);
+        $("#explanation").html(`<div>${d.explanation}</div><div class='year'>${makeYearString(d)}</div>`).css("opacity", 0.5);
       }
       link.style("stroke-width", function(l) {
         if (d === l.source || d === l.target) {
@@ -177,7 +187,7 @@ function makeSimulation(height, width, data){
         if (d === n) {
           return 1;
         }
-        if (_.find(data.links, function(l) {
+        if (links.find(function(l) {
           return (d === l.source && n === l.target) || (n === l.source && d === l.target);
         })) {
           return 1;
@@ -203,7 +213,7 @@ function makeSimulation(height, width, data){
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
   var simulation = d3.forceSimulation()
-    .nodes(data.nodes)
+    .nodes(data)
     .force("charge", d3.forceManyBody().strength(-800))
     .force("concentric", concentricCircles)
     .force("links", linkForce)
@@ -211,7 +221,7 @@ function makeSimulation(height, width, data){
     .force("box_force", boxForce);
 
   var link = svg.selectAll(".link")
-    .data(data.links)
+    .data(links)
     .enter()
     .append("line")
     .attr("class", "link")
@@ -219,7 +229,7 @@ function makeSimulation(height, width, data){
     .style("stroke-width", 0.05)
 
   var node = svg.selectAll(".node")
-    .data(data.nodes, d => d.id)
+    .data(data, d => d.id)
 
   var nodeEnter = node.enter()
     .append('g')
@@ -286,22 +296,17 @@ function makeSimulation(height, width, data){
   });
 
   var listView = function(){
-
-    // var done = false
-    //
-    // var ready = function(){
-    //   if (!done) {
-    //     done = true
-    //
-    // }
-
     simulation.stop()
     simulation.alphaTarget(0)
 
-    var projects = data.nodes.filter(function(n){
+    var projects = data.filter(function(n){
       return n.type === 'project' || n.type === 'center'
     }).sort(function(a, b){
-      return b.year - a.year
+      if (a.type === 'center' || b.type === 'center') {
+        return a.type === 'center' ? -1 : 1
+      } else {
+        return b.startyear - a.startyear
+      }
     })
 
     node = svg.selectAll(".node")
@@ -311,54 +316,75 @@ function makeSimulation(height, width, data){
       .exit()
       .remove()
 
+    var listHeight = 0
+    var itemHeights = []
+
     nodeEnter
       .style("opacity", 1)
       .style("text-anchor", "start")
-      .transition()
-      .duration(500)
-      .attr("x", 200)
-      .attr("y", function(d){
-        var i = projects.indexOf(d)
-        return 100+ i*100
-      })
-      .on("end", function(d){
-        node.selectAll(".list-explanation-container").attr('opacity', 1)
-      });
 
     node
       .append('foreignObject')
       .attr('class', 'list-explanation-container')
       .attr('opacity', 0)
       .attr('x', 200)
-      .attr('y', function(d){
-        var i = projects.indexOf(d)
-        return 110+ i*100
-      })
       .attr('width', 500)
-      .attr('height', 200)
+      .attr('height', 100)
       .append("xhtml:div")
       .attr('class', 'list-explanation')
       .html(function(d){
-        return d.explanation
+        return `<div class='year'>${makeYearString(d)}</div><div>${d.explanation}</div>`
       })
+      .each(function(d){
+        itemHeights[projects.indexOf(d)] = this.getBoundingClientRect().height + 60
+      })
+
+    node.selectAll(".list-explanation-container")
+      .attr('y', function(d){
+        var y = 0
+        for (var i=0;i<projects.indexOf(d);i++){
+          y += itemHeights[i]
+        }
+        return y + 110
+      })
+
+    nodeEnter
+      .transition()
+      .duration(500)
+      .attr("x", 200)
+      .attr('y', function(d){
+        var y = 0
+        for (var i=0;i<projects.indexOf(d);i++){
+          y += itemHeights[i]
+        }
+        return y + 100
+      })
+      .on("end", function(d){
+        node.selectAll(".list-explanation-container")
+          .attr('opacity', 1)
+      });
 
     svg
       .attr('height', function(){
-        return 110+ projects.length*100
+        var y = 0
+        for (var i=0;i<projects.length;i++){
+          y += itemHeights[i]
+        }
+        return 110+ y
       })
       .attr('width', function(){
-        return $(window).width()-2
+        return window.innerWidth-2
       })
     link.remove()
   }
 
   var networkView = function(){
     var restartSim = function(){
-      simulation.alphaTarget(0.5).restart()
+      simulation.alphaTarget(0.7).restart()
     }
 
     link = svg.selectAll(".link")
-      .data(data.links)
+      .data(links)
 
     link = link
       .enter()
@@ -372,7 +398,7 @@ function makeSimulation(height, width, data){
       .remove()
 
     node = svg.selectAll(".node")
-      .data(data.nodes, d => {return d.id})
+      .data(data, d => {return d.id})
 
     nodeEnter
       .transition()
@@ -394,7 +420,7 @@ function makeSimulation(height, width, data){
       })
       .append("text")
       .attr("class", "nodetext")
-      .text( function(d){return d.text})
+      .text( (d) => d.text)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
@@ -402,7 +428,6 @@ function makeSimulation(height, width, data){
       .merge(nodeEnter)
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
-
 
     nodeEnter.on("mouseover", handleMouseover)
     nodeEnter.on("mouseout", handleMouseout)
@@ -418,7 +443,7 @@ function makeSimulation(height, width, data){
         return height
       })
       .attr('width', function(){
-        return $(window).width()-2
+        return window.innerWidth-2
       })
   }
 
@@ -433,33 +458,10 @@ function makeSimulation(height, width, data){
       networkView()
     }
   })
-
 }
 
-// $(document).ready(function() {
-//
-//   var key = '1XWRuM1aIEYXyqw4JMdQrDkpoppXPcIPE58vKqbeOjBE&tqx'
-//   var url = `https://spreadsheets.google.com/feeds/cells/${key}/od6/public/values?alt=json-in-script&callback=render`;
-//   console.log(url)
-//   console.log('hey')
-//   d3.csv('data.csv', function(data) {
-//     console.log(data)
-//     makeSimulation(height, width, parseData(data))
-//   })
-// });
-function parse(response) {
-    var cols = response.table.cols,
-        rows = response.table.rows,
-        data = rows.map(function(row) {
-            var o = {};
-            row.c.forEach(function(c, j) { o[cols[j].label] = c.v; });
-            return o;
-        });
-    return data;
-}
-
-
-function render(data){
-  console.log(data)
-  console.log(parse(data))
-}
+d3.json("data.json", function(json) {
+  var width = window.innerWidth-2;
+  var height = window.innerHeight-2;
+  makeSimulation(height, width, json)
+})
