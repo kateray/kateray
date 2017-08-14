@@ -1,3 +1,13 @@
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
 body.home {
   background: -webkit-radial-gradient(#dad3e0,#9d94a6);
   font: 10px sans-serif;
@@ -152,6 +162,9 @@ body.blog a:hover {
 }
 .node.essay {
   font-size: 15px;
+}
+.node.tech {
+  font-size: 16px;
 }
 .node.subject {
   font-size: 16px;

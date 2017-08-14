@@ -74,11 +74,10 @@ function makeSimulation(height, width, data){
   function rectCollide() {
     var strength = 0.1;
     var padding = 2;
-    var t = data.length;
     for (var ii=0; ii<3; ii++){
-      for (var i = 0; i < t; ++i) {
+      for (var i = 0; i < data.length; ++i) {
         var a = data[i];
-        for (var j = i + 1; j < t; ++j) {
+        for (var j = i + 1; j < data.length; ++j) {
           var b = data[j],
             x = a.x + a.vx - b.x - b.vx,
             y = a.y + a.vy - b.y - b.vy,
@@ -276,7 +275,7 @@ function makeSimulation(height, width, data){
 
   var categoryOff = function() {
     App.category = null;
-    $(".category").css("color", "black");
+    $(".category").css("color", "");
     return updateNodeOpacity();
   };
 

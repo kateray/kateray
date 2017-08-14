@@ -14,10 +14,11 @@ html
   body.home
     #vis
     #key
-      .control.toggle-view chronological view
-      .control.category(data="project") projects
-      .control.category(data="essay") essays
-      .control.category(data="press") press
+      .control.noselect.toggle-view chronological view
+      .control.noselect.category(data="project") projects
+      .control.noselect.category(data="essay") writing
+      .control.noselect.category(data="tech") technologies
+      .control.noselect.category(data="press") press
       a(href="/resume.pdf", target="_blank") resume
       br
       br
