@@ -237,7 +237,9 @@ function makeSimulation(height, width, data){
     .append("svg:a")
     .attr("target", "_blank")
     .attr("xlink:href", function(d){
-      return d.href
+      if (d.href !== '') {
+        return d.href
+      }
     })
     .append("text")
     .attr("class", "nodetext")
@@ -320,6 +322,7 @@ function makeSimulation(height, width, data){
     var itemHeights = []
 
     nodeEnter
+      .on('mousedown.drag', null)
       .style("opacity", 1)
       .style("text-anchor", "start")
 
@@ -416,16 +419,18 @@ function makeSimulation(height, width, data){
       .attr("class", function(d){return "node " + d.type})
       .append("svg:a")
       .attr("target", "_blank").attr("xlink:href", function(d){
-        return d.href
+        if (d.href !== '') {
+          return d.href
+        }
       })
       .append("text")
       .attr("class", "nodetext")
       .text( (d) => d.text)
+      .merge(nodeEnter)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended))
-      .merge(nodeEnter)
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
 
