@@ -1,5 +1,6 @@
 var fs = require("fs"),
     json;
+var https = require('https');
 
 function readJsonFileSync(filepath, encoding){
 
@@ -22,7 +23,6 @@ var airbrake = require('airbrake').createClient(
 );
 airbrake.handleExceptions();
 
-var data = getConfig('data.json')
 var express = require('express');
 var app = express();
 app.set('views', __dirname + '/views');
@@ -39,8 +39,22 @@ app.get("/joining-experiment", function(req, res) {
     title: 'Joining Experiment'
   });
 });
-app.get("/data.json", function(req, res) {
-  res.send(data);
+
+app.get("/data", function(req, res) {
+  var url = 'https://spreadsheets.google.com/feeds/list/1XWRuM1aIEYXyqw4JMdQrDkpoppXPcIPE58vKqbeOjBE/od6/public/values?alt=json'
+  console.log('um')
+  https.get(url, res => {
+    console.log(res)
+    res.setEncoding("utf8");
+    let body = "";
+    res.on("data", data => {
+      body += data;
+    });
+    res.on("end", () => {
+      body = JSON.parse(body);
+      res.send(body)
+    });
+  });
 })
 var port = process.env.PORT || 3000;
 

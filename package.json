@@ -13,6 +13,7 @@
     "coffee-script": "1.6.2",
     "connect-assets": "*",
     "express": "3.4.0",
+    "fast-csv": "^2.4.0",
     "jade": "*"
   }
 }

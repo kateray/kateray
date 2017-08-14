@@ -436,11 +436,30 @@ function makeSimulation(height, width, data){
 
 }
 
-$(document).ready(function() {
-  var width = $(window).width()-2;
-  var height = $(window).height()-2;
+// $(document).ready(function() {
+//
+//   var key = '1XWRuM1aIEYXyqw4JMdQrDkpoppXPcIPE58vKqbeOjBE&tqx'
+//   var url = `https://spreadsheets.google.com/feeds/cells/${key}/od6/public/values?alt=json-in-script&callback=render`;
+//   console.log(url)
+//   console.log('hey')
+//   d3.csv('data.csv', function(data) {
+//     console.log(data)
+//     makeSimulation(height, width, parseData(data))
+//   })
+// });
+function parse(response) {
+    var cols = response.table.cols,
+        rows = response.table.rows,
+        data = rows.map(function(row) {
+            var o = {};
+            row.c.forEach(function(c, j) { o[cols[j].label] = c.v; });
+            return o;
+        });
+    return data;
+}
 
-  d3.json("data.json", function(json) {
-    makeSimulation(height, width, parseData(json))
-  })
-});
+
+function render(data){
+  console.log(data)
+  console.log(parse(data))
+}
