@@ -1,0 +1,212 @@
+@import 'variables';
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+body.home {
+  background: -webkit-radial-gradient(#dad3e0,#9d94a6);
+  font: 10px sans-serif;
+  margin: 0px;
+}
+
+body.blog {
+  font: 15px sans-serif;
+  line-height: 1.5;
+  margin: 50px 150px;
+  max-width: 500px;
+}
+
+.caption {
+  font-size: 14px;
+  font-style: italic;
+  opacity: .8;
+  margin-bottom: 25px;
+}
+
+@media only screen and (max-device-width: 736px)  {
+  body.blog {
+    font: 2.6em sans-serif;
+    line-height: 1.5;
+    margin: 5% 10%;
+    max-width: 100%;
+  }
+
+  .caption {
+    font-size: 0.9em;
+    margin-bottom: 2em;
+  }
+}
+
+body.blog a {
+  text-decoration: none;
+  color: #5C005C;
+}
+
+body.blog a:hover {
+  text-decoration: underline;
+}
+
+.nodetext.hover {
+  text-decoration: underline;
+}
+
+#github-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+#key {
+  position: fixed;
+  font-size: 16px;
+  top: 20px;
+  left: 20px;
+}
+
+#explanation {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #000000;
+  opacity: 0;
+  width: 175px;
+  color: #fff;
+  padding: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+  transition: opacity .5s linear;
+}
+
+#key a {
+  color: #000;
+  text-decoration: none;
+  width: 25px;
+  height: 25px;
+  display: block;
+  background-position:center center;
+  background-repeat:no-repeat;
+  padding: 5px 5px;
+}
+
+#key a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+#key .control {
+  padding: 5px;
+  cursor: pointer;
+}
+#key .control:hover {
+  color: blue;
+}
+
+#viz {
+  position: absolute;
+  z-index: 1;
+}
+.contact-container {
+  position: fixed;
+  right: 5px;
+  bottom: 5px;
+  display: block;
+  a {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    padding: 10px;
+    background-size:25px 25px;
+    background-position:center center;
+    background-repeat:no-repeat;
+  }
+}
+#contact-twitter {
+  background-size:40px 40px;
+  background-image: url("/images/twitter.png");
+  &:hover {
+    background-image: url("/images/twitter-hover.png");
+  }
+}
+
+#contact-wordpress {
+  background-image: url("/images/wordpress.png");
+}
+
+#contact-github {
+  background-image: url("/images/github.png");
+  &:hover {
+    background-image: url("/images/github-hover.png");
+  }
+}
+
+#contact-resume {
+  background-image: url("/images/resume.png");
+  &:hover {
+    background-image: url("/images/resume-hover.png");
+  }
+}
+
+#contact-mail {
+  background-image: url("/images/mail.png");
+  &:hover {
+    background-image: url("/images/mail-hover.png");
+  }
+}
+
+.year {
+  float: right;
+  font-style: italic;
+}
+
+.list-explanation .year {
+  float: none;
+}
+
+.node {
+  background-color: #e2e2e2;
+  font-size: 12px;
+}
+
+.nodetext {
+  transition: opacity .1s linear;
+}
+
+.list-explanation {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.list-explanation-container {
+  transition: opacity .5s linear;
+}
+.link {
+  stroke: #000;
+}
+
+.node.center {
+  z-index: 5;
+  font-size: 60px;
+  cursor: default;
+}
+.node.project {
+  z-index: 4;
+  font-size: 25px;
+}
+.node.essay {
+  font-size: 15px;
+}
+.node.tech {
+  font-size: 16px;
+}
+.node.subject {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: default;
+}

@@ -1,17 +1,50 @@
 {
   "name": "kateray",
-  "version": "0.0.1",
-  "private": true,
-  "engines": {
-    "node": "6.6.0"
-  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git://github.com/kateray/kateray.git",
+  "author": "Kate Ray",
+  "license": "MIT",
   "scripts": {
-    "start": "node server.js"
+    "test": "standard && jest",
+    "start": "npm-run-all --parallel watch:server watch:build",
+    "watch:build": "webpack -d --watch",
+    "watch:server": "nodemon server/src/index.js --exec babel-node"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "context",
+      "test",
+      "expect"
+    ],
+    "ignore": [
+      "/dist/"
+    ]
   },
   "dependencies": {
-    "airbrake": "^1.2.2",
-    "connect-assets": "*",
-    "express": "3.4.0",
-    "jade": "*"
+    "airbrake": "^2.1.0",
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "d3-selection": "^1.1.0",
+    "express": "^4.15.3",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "node-sass": "^4.5.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "sass-loader": "^6.0.6",
+    "standard": "^10.0.2",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.2.0",
+    "webpack-manifest-plugin": "^1.1.2"
+  },
+  "devDependencies": {
+    "jest": "^20.0.4",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0",
+    "yarn-run-all": "^3.1.1"
   }
 }
