@@ -12,7 +12,7 @@
     "heroku-postbuild": "npm run build",
     "watch:build": "webpack -d --watch",
     "watch:server": "nodemon server/src/index.js --exec babel-node",
-    "start": "node index.js"
+    "start": "node server/src"
   },
   "standard": {
     "globals": [
