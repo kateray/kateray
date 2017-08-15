@@ -454,11 +454,11 @@ function makeSimulation(height, width, data){
   $('.toggle-view').click(function(){
     if (viewStyle === 'network') {
       viewStyle = 'list'
-      $(this).text('graph view')
+      $(this).text('net view')
       listView()
     } else {
       viewStyle = 'network'
-      $(this).text('chronological view')
+      $(this).text('list view')
       networkView()
     }
   })
