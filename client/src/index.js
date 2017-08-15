@@ -60,21 +60,25 @@ function makeSimulation(height, width, data){
     })
 
   var category = key.selectAll('.category')
-    .data(['project', 'tech', 'press'])
+    .data([
+      {id: 'project', name: 'projects'},
+      {id: 'tech', name: 'tools'},
+      {id: 'press', name: 'press'}
+    ])
     .enter()
     .append('div')
     .attr('class', 'control noselect category')
     .html((d) => {
-      return d
+      return d.name
     })
     .on('click', (d) => {
       if (viewStyle === 'list') return
-      if (App.category === d) {
+      if (App.category === d.id) {
         App.category = null;
         category.style('color', '')
         updateNodeOpacity()
       } else {
-        App.category = d;
+        App.category = d.id;
         category.style('color', (dd) => {
           if (dd === d) return 'purple'
           else return ''

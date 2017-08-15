@@ -8,6 +8,8 @@
   "scripts": {
     "test": "standard && jest",
     "start": "npm-run-all --parallel watch:server watch:build",
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js --progress --colors",
+    "heroku-postbuild": "npm run build",
     "watch:build": "webpack -d --watch",
     "watch:server": "nodemon server/src/index.js --exec babel-node"
   },
