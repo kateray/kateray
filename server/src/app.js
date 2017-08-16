@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const manifestPath = `${process.cwd()}/dist/build-manifest.json`
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+const env = process.env.NODE_ENV || 'development';
 
 function readJsonFileSync(filepath, encoding){
   if (typeof (encoding) == 'undefined'){
@@ -19,11 +20,13 @@ function getConfig(file){
 
 const app = Express()
 
-const airbrake = require('airbrake').createClient(
-  '140494', // Project ID
-  'b57e26447f79beb22986db6be6ee6c04' // Project key
-);
-airbrake.handleExceptions()
+if (env === 'production') {
+  const airbrake = require('airbrake').createClient(
+    '140494', // Project ID
+    'b57e26447f79beb22986db6be6ee6c04' // Project key
+  );
+  airbrake.handleExceptions()
+}
 
 app.use(Express.static('public'))
 app.use('/dist', Express.static('dist'))
