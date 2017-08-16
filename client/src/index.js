@@ -7,6 +7,11 @@ var viewStyle = 'network'
 var App = {};
 App.category = null;
 
+var updateNodeOpacity = function(nodeEnter) {
+  return nodeEnter.style("opacity", function(n) {
+    return nodeOpacity(n);
+  })
+}
 function nodeOpacity(n){
   if (App.category) {
     return App.category === n.type ? 1 : 0.1;
@@ -36,55 +41,62 @@ function makeYearString(d){
 }
 
 function makeSimulation(height, width, data){
+  const isMobile = width <= 400
+
+  function addKeyToPage(){
+    var key = d3.select("body").append("div")
+      .attr("id", "key")
+
+    var toggle = key.append("div")
+      .attr("id", "toggle-view")
+      .attr('class', 'control noselect')
+      .html('list view')
+      .on('click', () => {
+        if (viewStyle === 'network') {
+          viewStyle = 'list'
+          toggle.html('net view')
+          listView()
+        } else {
+          viewStyle = 'network'
+          toggle.html('list view')
+          networkView()
+        }
+      })
+
+    var category = key.selectAll('.category')
+      .data([
+        {id: 'project', name: 'projects'},
+        {id: 'tech', name: 'tools'},
+        {id: 'press', name: 'press'}
+      ])
+      .enter()
+      .append('div')
+      .attr('class', 'control noselect category')
+      .html((d) => {
+        return d.name
+      })
+      .on('click', (d) => {
+        if (viewStyle === 'list') return
+        if (App.category === d.id) {
+          App.category = null;
+          category.style('color', '')
+          updateNodeOpacity(nodeEnter)
+        } else {
+          App.category = d.id;
+          category.style('color', (dd) => {
+            if (dd === d) return 'purple'
+            else return ''
+          })
+          updateNodeOpacity(nodeEnter)
+        }
+      })
+  }
   var explanation = d3.select("#viz").append("div")
     .attr("id", "explanation")
 
-  var key = d3.select("body").append("div")
-    .attr("id", "key")
-
-  var toggle = key.append("div")
-    .attr("id", "toggle-view")
-    .attr('class', 'control noselect')
-    .html('list view')
-    .on('click', () => {
-      if (viewStyle === 'network') {
-        viewStyle = 'list'
-        toggle.html('net view')
-        listView()
-      } else {
-        viewStyle = 'network'
-        toggle.html('list view')
-        networkView()
-      }
-    })
-
-  var category = key.selectAll('.category')
-    .data([
-      {id: 'project', name: 'projects'},
-      {id: 'tech', name: 'tools'},
-      {id: 'press', name: 'press'}
-    ])
-    .enter()
-    .append('div')
-    .attr('class', 'control noselect category')
-    .html((d) => {
-      return d.name
-    })
-    .on('click', (d) => {
-      if (viewStyle === 'list') return
-      if (App.category === d.id) {
-        App.category = null;
-        category.style('color', '')
-        updateNodeOpacity()
-      } else {
-        App.category = d.id;
-        category.style('color', (dd) => {
-          if (dd === d) return 'purple'
-          else return ''
-        })
-        updateNodeOpacity()
-      }
-    })
+  if (!isMobile) {
+    addKeyToPage()
+  }
 
   var links = []
   data.forEach(function(d) {
@@ -178,7 +190,7 @@ function makeSimulation(height, width, data){
     })
     if (viewStyle === 'network') {
       link.style("stroke-width", 0.05);
-      updateNodeOpacity();
+      updateNodeOpacity(nodeEnter);
       explanation.style("opacity", 0)
     }
   }
@@ -189,7 +201,7 @@ function makeSimulation(height, width, data){
 
   var simulation = d3.forceSimulation()
     .nodes(data)
-    .force("charge", d3.forceManyBody().strength(-800))
+    .force("charge", d3.forceManyBody().strength(-500))
     .force("concentric", f.concentricCircles)
     .force("links", d3.forceLink(links).id(function(d) { return d.name; }).distance(10).strength(0.2))
     .force("box_force", f.boxForce)
@@ -208,7 +220,7 @@ function makeSimulation(height, width, data){
 
   var nodeEnter = node.enter()
     .append('g')
-    .attr("class", function(d){return "node " + d.type})
+    .attr("class", (d) => "node " + d.type)
     .append("svg:a")
     .attr("target", "_blank")
     .attr("xlink:href", function(d){
@@ -221,6 +233,9 @@ function makeSimulation(height, width, data){
     .text( function(d){return d.text})
     .style("opacity", nodeOpacity)
     .style("text-anchor", "middle")
+    .on("mouseover", handleMouseover)
+    .on("mouseout", handleMouseout)
+    .each(setNodeDimensions)
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -238,16 +253,6 @@ function makeSimulation(height, width, data){
       .attr("y2", function(d) { return d.target.y; });
   }
   simulation.on("tick", tickActions);
-
-  nodeEnter.each(setNodeDimensions)
-  nodeEnter.on("mouseover", handleMouseover)
-  nodeEnter.on("mouseout", handleMouseout)
-
-  var updateNodeOpacity = function() {
-    return nodeEnter.style("opacity", function(n) {
-      return nodeOpacity(n);
-    });
-  };
 
   var listView = function(){
     simulation.stop()
@@ -274,6 +279,7 @@ function makeSimulation(height, width, data){
 
     nodeEnter
       .on('mousedown.drag', null)
+      .on('touchstart.drag', null)
       .style("opacity", 1)
       .style("text-anchor", "start")
 
@@ -281,8 +287,8 @@ function makeSimulation(height, width, data){
       .append('foreignObject')
       .attr('class', 'list-explanation-container')
       .attr('opacity', 0)
-      .attr('x', 200)
-      .attr('width', 500)
+      .attr('x', () => {return isMobile ? '5%' : '200'})
+      .attr('width', () => {return isMobile ? '90%' : '500'})
       .attr('height', 100)
       .append("xhtml:div")
       .attr('class', 'list-explanation')
@@ -301,21 +307,35 @@ function makeSimulation(height, width, data){
         return y + 110
       })
 
-    nodeEnter
-      .transition()
-      .duration(500)
-      .attr("x", 200)
-      .attr('y', function(d){
-        var y = 0
-        for (var i=0;i<projects.indexOf(d);i++){
-          y += itemHeights[i]
-        }
-        return y + 100
-      })
-      .on("end", function(d){
-        node.selectAll(".list-explanation-container")
-          .attr('opacity', 1)
-      });
+    function showListExplanations() {
+      node.selectAll(".list-explanation-container")
+        .attr('opacity', 1)
+    }
+    if (!isMobile) {
+      nodeEnter
+        .transition()
+        .duration(500)
+        .attr('x', () => {return isMobile ? '5%' : '200'})
+        .attr('y', function(d){
+          var y = 0
+          for (var i=0;i<projects.indexOf(d);i++){
+            y += itemHeights[i]
+          }
+          return y + 100
+        })
+        .on("end", showListExplanations)
+    } else {
+      nodeEnter
+        .attr('x', () => {return isMobile ? '5%' : '200'})
+        .attr('y', function(d){
+          var y = 0
+          for (var i=0;i<projects.indexOf(d);i++){
+            y += itemHeights[i]
+          }
+          return y + 100
+        })
+      showListExplanations()
+    }
 
     svg
       .attr('height', function(){
@@ -356,12 +376,8 @@ function makeSimulation(height, width, data){
     nodeEnter
       .transition()
       .duration(500)
-      .attr("x", function(d){
-        return d.x
-      })
-      .attr("y", function(d){
-        return d.y
-      })
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
       .on("end", restartSim);
 
     nodeEnter = node.enter()
@@ -395,6 +411,11 @@ function makeSimulation(height, width, data){
     svg
       .attr('height', height)
       .attr('width', window.innerWidth-2)
+  }
+
+  if (isMobile) {
+    viewStyle = 'list'
+    listView()
   }
 }
 
