@@ -122,29 +122,43 @@ function makeSimulation(height, width, data){
     });
   }
 
+  function verticalOverlap(a, b, padding){
+    // if a is above b, then use b's height, otherwise a's
+    return (a.y > b.y) ? (b.height + padding) : (a.height + padding)
+  }
+
+  function horizontalOverlap(a, b, padding){
+    // both centered so add widths but divide by 2
+    return (a.width + b.width + padding)/2
+  }
+
+  function doesCollide(a, b, padding){
+    var x = a.x + a.vx - b.x - b.vx,
+        y = a.y + a.vy - b.y - b.vy,
+        w = horizontalOverlap(a, b, padding),
+        h = verticalOverlap(a, b, padding)
+    return Math.abs(x) < w && Math.abs(y) < h
+  }
+
   // keeps nodes from overlapping, by moving their y value
   function rectCollide() {
     var strength = 0.1;
     var padding = 2;
     for (var ii=0; ii<3; ii++){
-      for (var i = 0; i < data.length; ++i) {
-        var a = data[i];
+      data.forEach( (a, i) => {
         for (var j = i + 1; j < data.length; ++j) {
           var b = data[j],
             x = a.x + a.vx - b.x - b.vx,
             y = a.y + a.vy - b.y - b.vy,
-            lx = Math.abs(x),
-            ly = Math.abs(y),
-            // both centered so add widths but divide by 2
-            w = (a.width + b.width + padding)/2,
-            // if a is above b, then use a's height, otherwise b's
-            h = (a.y > b.y) ? (a.height + padding) : (b.height + padding);
-          if (lx < w && ly < h) {
-            ly = (ly - h) * (y < 0 ? -strength : strength);
-            a.vy -= ly, b.vy += ly;
+            ly = Math.abs(y)
+          if (doesCollide(a, b, padding)) {
+            var h = verticalOverlap(a, b, padding)
+            var vertDistAddition = (ly - h) * (y < 0 ? -strength : strength);
+            var horzDistAddition = x < 0 ? -2 : 2
+            a.vy -= vertDistAddition, b.vy += vertDistAddition;
           }
         }
-      }
+      })
     }
   }
 
@@ -270,8 +284,8 @@ function makeSimulation(height, width, data){
     .force("charge", d3.forceManyBody().strength(-800))
     .force("concentric", concentricCircles)
     .force("links", linkForce)
+    .force("box_force", boxForce)
     .force("collide", rectCollide)
-    .force("box_force", boxForce);
 
   var link = svg.selectAll(".link")
     .data(links)
@@ -343,7 +357,6 @@ function makeSimulation(height, width, data){
 
     node = svg.selectAll(".node")
       .data(projects, d => d.id)
-
     node
       .exit()
       .remove()
@@ -371,7 +384,6 @@ function makeSimulation(height, width, data){
       .each(function(d){
         itemHeights[projects.indexOf(d)] = this.getBoundingClientRect().height + 60
       })
-
     node.selectAll(".list-explanation-container")
       .attr('y', function(d){
         var y = 0
