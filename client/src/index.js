@@ -1,3 +1,5 @@
+import createForces from './forces'
+
 require('../css/App.scss')
 
 var viewStyle = 'network'
@@ -34,9 +36,6 @@ function makeYearString(d){
 }
 
 function makeSimulation(height, width, data){
-  var cx = width/2;
-  var cy = height/2;
-
   var explanation = d3.select("#viz").append("div")
     .attr("id", "explanation")
 
@@ -98,99 +97,6 @@ function makeSimulation(height, width, data){
     })
   });
 
-  // Define all the forces
-  var linkForce = d3.forceLink(links)
-    .id(function(d) { return d.name; })
-    .distance(10)
-    .strength(0.2);
-
-  // keeps nodes from sliding off page
-  function boxForce(){
-    data.forEach(function(n) {
-      var distX = n.width/2;
-      var distY = n.height;
-
-      if (n.y < 250 || n.y > (height-50)) {
-        // if point is near top or bottom, constrain x in smaller box
-        n.x = Math.max(distX+100, Math.min(width - distX-250, n.x));
-      } else {
-        // otherwise just keep x 10px from left and right
-        n.x = Math.max(distX+10, Math.min(width - distX-10, n.x));
-      }
-      // keep y 15px from top and bottom
-      n.y = Math.max(distY+15, Math.min(height - distY-15, n.y));
-    });
-  }
-
-  function verticalOverlap(a, b, padding){
-    // if a is above b, then use b's height, otherwise a's
-    return (a.y > b.y) ? (b.height + padding) : (a.height + padding)
-  }
-
-  function horizontalOverlap(a, b, padding){
-    // both centered so add widths but divide by 2
-    return (a.width + b.width + padding)/2
-  }
-
-  function doesCollide(a, b, padding){
-    var x = a.x + a.vx - b.x - b.vx,
-        y = a.y + a.vy - b.y - b.vy,
-        w = horizontalOverlap(a, b, padding),
-        h = verticalOverlap(a, b, padding)
-    return Math.abs(x) < w && Math.abs(y) < h
-  }
-
-  // keeps nodes from overlapping, by moving their y value
-  function rectCollide() {
-    var strength = 0.1;
-    var padding = 2;
-    for (var ii=0; ii<3; ii++){
-      data.forEach( (a, i) => {
-        for (var j = i + 1; j < data.length; ++j) {
-          var b = data[j],
-            x = a.x + a.vx - b.x - b.vx,
-            y = a.y + a.vy - b.y - b.vy,
-            ly = Math.abs(y)
-          if (doesCollide(a, b, padding)) {
-            var h = verticalOverlap(a, b, padding)
-            var vertDistAddition = (ly - h) * (y < 0 ? -strength : strength);
-            var horzDistAddition = x < 0 ? -2 : 2
-            a.vy -= vertDistAddition, b.vy += vertDistAddition;
-          }
-        }
-      })
-    }
-  }
-
-  // puts project nodes in a circle with radius 200-300 around center
-  function concentricCircles() {
-    var smallRadius = 200;
-    var bigRadius = 300;
-    data.forEach(function(n) {
-      var strength = 3;
-      var distX = n.x - cx;
-      var distY = n.y - cy;
-      var dist = Math.sqrt(Math.pow(distX,2)+ Math.pow(distY,2));
-      // a^2 + b^2
-      var sumSquares = Math.pow(distX,2) + Math.pow(distY,2);
-      if (n.type === "project") {
-        // pythag theorem: if a^2 + b^2 <= csmall^2,
-        // then hypotenuse is smaller than radius of small circle
-        // point is inside small circle
-        if ( sumSquares <= Math.pow(smallRadius,2) ){
-          n.x = cx + distX / dist * smallRadius;
-          n.y = cy + distY / dist * smallRadius;
-        // if a^2 + b^2 > cbig^2
-        // then hypotenuse is bigger than radius of big circle
-        // point is outside big circle
-        } else if ( sumSquares > Math.pow(bigRadius,2) ){
-          n.x = cx + distX / dist * bigRadius;
-          n.y = cy + distY / dist * bigRadius;
-        }
-      }
-    });
-  }
-
   var dragstarted = function(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
@@ -213,8 +119,8 @@ function makeSimulation(height, width, data){
     data[i].height = this.getBoundingClientRect().height;
     if (data[i].id === "center") {
       // fix center node
-      d.fx = cx;
-      d.fy = cy;
+      d.fx = width/2;
+      d.fy = height/2;
     } else {
       // start other nodes in random position
       d.x = Math.random()*width;
@@ -279,13 +185,15 @@ function makeSimulation(height, width, data){
 
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
+  var f = createForces(data, width, height)
+
   var simulation = d3.forceSimulation()
     .nodes(data)
     .force("charge", d3.forceManyBody().strength(-800))
-    .force("concentric", concentricCircles)
-    .force("links", linkForce)
-    .force("box_force", boxForce)
-    .force("collide", rectCollide)
+    .force("concentric", f.concentricCircles)
+    .force("links", d3.forceLink(links).id(function(d) { return d.name; }).distance(10).strength(0.2))
+    .force("box_force", f.boxForce)
+    .force("collide", f.rectCollide)
 
   var link = svg.selectAll(".link")
     .data(links)
@@ -357,11 +265,11 @@ function makeSimulation(height, width, data){
 
     node = svg.selectAll(".node")
       .data(projects, d => d.id)
+
     node
       .exit()
       .remove()
 
-    var listHeight = 0
     var itemHeights = []
 
     nodeEnter
@@ -469,15 +377,14 @@ function makeSimulation(height, width, data){
       .attr("class", "nodetext")
       .text( (d) => d.text)
       .merge(nodeEnter)
+      .on("mouseover", handleMouseover)
+      .on("mouseout", handleMouseout)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended))
       .style("opacity", nodeOpacity)
       .style("text-anchor", "middle")
-
-    nodeEnter.on("mouseover", handleMouseover)
-    nodeEnter.on("mouseout", handleMouseout)
 
     svg.selectAll('.list-explanation-container').remove()
 
@@ -486,12 +393,8 @@ function makeSimulation(height, width, data){
       .remove()
 
     svg
-      .attr('height', function(){
-        return height
-      })
-      .attr('width', function(){
-        return window.innerWidth-2
-      })
+      .attr('height', height)
+      .attr('width', window.innerWidth-2)
   }
 }
 
