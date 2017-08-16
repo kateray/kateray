@@ -112,6 +112,9 @@ body.blog a:hover {
   position: absolute;
   z-index: 1;
 }
+.list-explanation-container {
+  transition: opacity .5s linear;
+}
 .contact-container {
   position: fixed;
   right: 5px;
@@ -127,36 +130,67 @@ body.blog a:hover {
     background-repeat:no-repeat;
   }
 }
-#contact-twitter {
-  background-size:40px 40px;
-  background-image: url("/images/twitter.png");
-  &:hover {
-    background-image: url("/images/twitter-hover.png");
+@media only screen and (max-width: 400px)  {
+  .contact-container {
+    width: 100%;
+    height: 50px;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(0,0,0,0.8);
+    text-align: center;
+    a {
+      padding: 10px 20px;
+    }
   }
 }
-
-#contact-wordpress {
-  background-image: url("/images/wordpress.png");
+#contact-twitter {
+  background-size:40px 40px;
+  background-image: url("/images/twitter-hover.png");
 }
 
 #contact-github {
-  background-image: url("/images/github.png");
-  &:hover {
-    background-image: url("/images/github-hover.png");
-  }
+  background-image: url("/images/github-hover.png");
 }
 
 #contact-resume {
-  background-image: url("/images/resume.png");
-  &:hover {
-    background-image: url("/images/resume-hover.png");
-  }
+  background-image: url("/images/resume-hover.png");
 }
 
 #contact-mail {
-  background-image: url("/images/mail.png");
-  &:hover {
-    background-image: url("/images/mail-hover.png");
+  background-image: url("/images/mail-hover.png");
+}
+@media only screen and (min-width: 401px)  {
+  #contact-twitter {
+    background-size:40px 40px;
+    background-image: url("/images/twitter.png");
+    &:hover {
+      background-image: url("/images/twitter-hover.png");
+    }
+  }
+
+  #contact-wordpress {
+    background-image: url("/images/wordpress.png");
+  }
+
+  #contact-github {
+    background-image: url("/images/github.png");
+    &:hover {
+      background-image: url("/images/github-hover.png");
+    }
+  }
+
+  #contact-resume {
+    background-image: url("/images/resume.png");
+    &:hover {
+      background-image: url("/images/resume-hover.png");
+    }
+  }
+
+  #contact-mail {
+    background-image: url("/images/mail.png");
+    &:hover {
+      background-image: url("/images/mail-hover.png");
+    }
   }
 }
 
@@ -182,9 +216,12 @@ body.blog a:hover {
   font-size: 14px;
   line-height: 1.5;
 }
-.list-explanation-container {
-  transition: opacity .5s linear;
+@media only screen and (min-width: 401px)  {
+  .list-explanation-container {
+    transition: opacity .5s linear;
+  }
 }
+
 .link {
   stroke: #000;
 }
