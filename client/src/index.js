@@ -195,7 +195,7 @@ function makeSimulation(height, width, data){
     }
   }
 
-  var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+  var svg = d3.select("body").append("svg").attr("width", '100%').attr("height", height);
 
   var f = createForces(data, width, height)
 
@@ -345,9 +345,7 @@ function makeSimulation(height, width, data){
         }
         return 110+ y
       })
-      .attr('width', function(){
-        return window.innerWidth-2
-      })
+      .attr('width', '100%')
     link.remove()
   }
 
@@ -410,7 +408,7 @@ function makeSimulation(height, width, data){
 
     svg
       .attr('height', height)
-      .attr('width', window.innerWidth-2)
+      .attr('width', '100%')
   }
 
   if (isMobile) {
