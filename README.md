@@ -5,7 +5,9 @@
 ## Update data
 
 update spreadsheet
+
 `$ node get_data.js`
+
 deploy
 
 ## TODO
