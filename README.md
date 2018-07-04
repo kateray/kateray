@@ -1,6 +1,6 @@
 ## Run locally
 
-`$ node server`
+`$ yarn start:dev`
 
 ## Update data
 
@@ -8,7 +8,7 @@ update spreadsheet
 
 `$ node get_data.js`
 
-deploy
+Deploy to heroku
 
 ## TODO
 
