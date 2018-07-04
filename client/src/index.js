@@ -233,6 +233,9 @@ function makeSimulation(height, width, data){
     .text( function(d){return d.text})
     .style("opacity", nodeOpacity)
     .style("text-anchor", "middle")
+    .style("cursor", function(d){
+      return d.href === '' ? 'normal' : 'pointer'
+    })
     .on("mouseover", handleMouseover)
     .on("mouseout", handleMouseout)
     .each(setNodeDimensions)
