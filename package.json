@@ -1,6 +1,9 @@
 {
   "name": "kateray",
   "version": "1.0.0",
+  "engines": {
+    "node": "8.4.0"
+  },
   "main": "index.js",
   "repository": "git://github.com/kateray/kateray.git",
   "author": "Kate Ray",
